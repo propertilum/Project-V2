@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -12,12 +12,30 @@ const firebaseConfig = {
   appId:             import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-if (!firebaseConfig.apiKey) {
-  console.error('[CardHub] Firebase config missing. Check your .env file.');
+export const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey &&
+  firebaseConfig.projectId &&
+  firebaseConfig.apiKey !== 'undefined'
+);
+
+let app = null;
+let auth = null;
+let db = null;
+
+if (isFirebaseConfigured) {
+  try {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } catch (error) {
+    console.error('[CardHub] Firebase initialization failed:', error);
+  }
+} else {
+  console.warn(
+    '[CardHub] Firebase configuration is missing or incomplete.\n' +
+    'If deployed to Vercel, configure VITE_FIREBASE_* in Project Settings -> Environment Variables.'
+  );
 }
 
-const app = initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-export const db   = getFirestore(app);
+export { auth, db };
 export default app;

@@ -6,7 +6,7 @@ import {
 import { signInWithEmail, getAuthErrorMessage } from '../../lib/authService';
 import { getUserProfile } from '../../lib/firestoreService';
 import { setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { auth, isFirebaseConfigured } from '../../lib/firebase';
 
 // Admin secret password — only reachable after the shift-click activation
 const ADMIN_SECRET_PASSWORD = 'cardhub-admin-2025!';
@@ -71,13 +71,33 @@ export default function LoginPage({
       return;
     }
 
-    // ── Customer login: Firebase Auth ──
+    // ── Customer login ──
+    if (!isFirebaseConfigured || !auth) {
+      // Offline/Demo fallback when Firebase credentials are not yet configured in Vercel
+      const localUser = registeredUsers.find((u) => u.email?.toLowerCase() === normalizedEmail);
+      if (localUser) {
+        if (localUser.status === 'suspended') {
+          setError('Your account has been suspended. Please contact support.');
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        onLoginSuccess(localUser, 'customer');
+        return;
+      }
+      setLoading(false);
+      setError('Firebase environment variables are not configured in Vercel. Add VITE_FIREBASE_* in Project Settings or log in with demo account kamran@example.com.');
+      return;
+    }
+
     try {
       // BUG-05 FIX: honour the "Keep me signed in" checkbox via Firebase persistence
-      await setPersistence(
-        auth,
-        form.remember ? browserLocalPersistence : browserSessionPersistence
-      );
+      if (auth) {
+        await setPersistence(
+          auth,
+          form.remember ? browserLocalPersistence : browserSessionPersistence
+        ).catch(() => {});
+      }
 
       const credential = await signInWithEmail(normalizedEmail, form.password);
       const uid = credential.user.uid;

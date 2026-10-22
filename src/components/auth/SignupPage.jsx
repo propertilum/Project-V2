@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { signUpWithEmail, getAuthErrorMessage, sendUserEmailVerification } from '../../lib/authService';
 import { createUserProfile } from '../../lib/firestoreService';
+import { isFirebaseConfigured } from '../../lib/firebase';
 import { checkEmailExists } from '../../utils/emailValidator';
 
 export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLogin }) {
@@ -67,24 +68,37 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
       // DNS check failed (network issue) — let Firebase handle validation
     }
 
-    // Step 2: Create Firebase Auth account
+    // Step 2: Create Account
     setLoadingStep('Creating your account…');
-    let firebaseCredential;
-    try {
-      firebaseCredential = await signUpWithEmail(
-        form.email.trim().toLowerCase(),
-        form.password,
-        form.name.trim()
-      );
-    } catch (authError) {
-      setError(getAuthErrorMessage(authError));
-      setLoading(false);
-      setLoadingStep('');
-      return;
+    let uid = `usr-${Date.now()}`;
+    let isEmailVerified = false;
+
+    if (isFirebaseConfigured) {
+      try {
+        const firebaseCredential = await signUpWithEmail(
+          form.email.trim().toLowerCase(),
+          form.password,
+          form.name.trim()
+        );
+        uid = firebaseCredential.user.uid;
+        isEmailVerified = Boolean(firebaseCredential.user.emailVerified);
+
+        // Step 4: Dispatch verification email in background
+        sendUserEmailVerification(firebaseCredential.user).catch((vErr) => {
+          console.warn('[Signup] Notice on sending verification email:', vErr);
+        });
+      } catch (authError) {
+        setError(getAuthErrorMessage(authError));
+        setLoading(false);
+        setLoadingStep('');
+        return;
+      }
+    } else {
+      // Offline/Demo fallback mode
+      isEmailVerified = true;
     }
 
     // Step 3: Build user profile
-    const uid = firebaseCredential.user.uid;
     const newUser = {
       id: uid, uid,
       name: form.name.trim(),
@@ -96,23 +110,20 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
       role: 'customer',
       status: 'active',
       isFirstLogin: true,
-      emailVerified: false,
+      emailVerified: isEmailVerified,
       createdAt: Date.now(),
       cardCount: 0,
       primaryCard: null,
     };
 
-    // Step 4: Dispatch verification email in background
-    sendUserEmailVerification(firebaseCredential.user).catch((vErr) => {
-      console.warn('[Signup] Notice on sending verification email:', vErr);
-    });
-
     // Step 5: Save to Firestore
-    setLoadingStep('Setting up your vault…');
-    try {
-      await createUserProfile(uid, newUser);
-    } catch (dbError) {
-      console.error('Firestore profile save failed:', dbError);
+    if (isFirebaseConfigured) {
+      setLoadingStep('Setting up your vault…');
+      try {
+        await createUserProfile(uid, newUser);
+      } catch (dbError) {
+        console.error('Firestore profile save failed:', dbError);
+      }
     }
 
     setLoading(false);

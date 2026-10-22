@@ -12,7 +12,7 @@ import {
   sendEmailVerification,
   reload,
 } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, isFirebaseConfigured } from './firebase';
 
 /**
  * Create a new user account in Firebase Auth
@@ -22,6 +22,9 @@ import { auth } from './firebase';
  * @returns {Promise<import('firebase/auth').UserCredential>}
  */
 export async function signUpWithEmail(email, password, displayName) {
+  if (!isFirebaseConfigured || !auth) {
+    throw new Error('Firebase is not configured. Please add VITE_FIREBASE_* environment variables in your Vercel deployment settings.');
+  }
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   // Store display name on the Firebase Auth user profile
   await updateProfile(credential.user, { displayName });
@@ -35,6 +38,9 @@ export async function signUpWithEmail(email, password, displayName) {
  * @returns {Promise<import('firebase/auth').UserCredential>}
  */
 export async function signInWithEmail(email, password) {
+  if (!isFirebaseConfigured || !auth) {
+    throw new Error('Firebase is not configured. Please add VITE_FIREBASE_* environment variables in your Vercel deployment settings.');
+  }
   return await signInWithEmailAndPassword(auth, email, password);
 }
 
@@ -42,6 +48,7 @@ export async function signInWithEmail(email, password) {
  * Sign the current user out of Firebase Auth
  */
 export async function signOut() {
+  if (!isFirebaseConfigured || !auth) return;
   return await firebaseSignOut(auth);
 }
 
@@ -51,6 +58,9 @@ export async function signOut() {
  * @returns {Promise<{success: boolean, error?: string}>}
  */
 export async function sendUserEmailVerification(user = null) {
+  if (!isFirebaseConfigured || !auth) {
+    return { success: false, error: 'Firebase is not configured.' };
+  }
   let targetUser = user || auth.currentUser;
   if (!targetUser && typeof auth.authStateReady === 'function') {
     await auth.authStateReady().catch(() => {});
@@ -74,6 +84,7 @@ export async function sendUserEmailVerification(user = null) {
  * @returns {Promise<import('firebase/auth').User|null>}
  */
 export async function reloadCurrentUser(user = null) {
+  if (!isFirebaseConfigured || !auth) return null;
   let targetUser = user || auth.currentUser;
   if (!targetUser && typeof auth.authStateReady === 'function') {
     await auth.authStateReady().catch(() => {});
@@ -95,6 +106,10 @@ export async function reloadCurrentUser(user = null) {
  * @returns {function} unsubscribe function
  */
 export function onAuthStateChanged(callback) {
+  if (!isFirebaseConfigured || !auth) {
+    setTimeout(() => callback(null), 0);
+    return () => {};
+  }
   return firebaseOnAuthStateChanged(auth, callback);
 }
 

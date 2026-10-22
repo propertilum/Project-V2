@@ -35,6 +35,7 @@ function withTimeout(promise, ms = FIRESTORE_TIMEOUT_MS) {
  * Save a new user profile to Firestore (creates or overwrites)
  */
 export async function createUserProfile(uid, profileData) {
+  if (!db) return;
   try {
     const userRef = doc(db, USERS_COLLECTION, uid);
     await withTimeout(
@@ -54,6 +55,7 @@ export async function createUserProfile(uid, profileData) {
  * Retrieve a user profile from Firestore by UID
  */
 export async function getUserProfile(uid) {
+  if (!db) return null;
   try {
     const userRef = doc(db, USERS_COLLECTION, uid);
     const snap = await withTimeout(getDoc(userRef));
@@ -70,6 +72,7 @@ export async function getUserProfile(uid) {
  * Falls back to setDoc (merge) if the document doesn't exist yet.
  */
 export async function updateUserProfile(uid, fields) {
+  if (!db) return;
   try {
     const userRef = doc(db, USERS_COLLECTION, uid);
     await withTimeout(
@@ -104,6 +107,7 @@ export async function updateUserProfile(uid, fields) {
  * Delete a user profile from Firestore
  */
 export async function deleteUserProfile(uid) {
+  if (!db) return;
   try {
     const userRef = doc(db, USERS_COLLECTION, uid);
     await withTimeout(deleteDoc(userRef));
@@ -116,6 +120,7 @@ export async function deleteUserProfile(uid) {
  * Fetch all user profiles from Firestore (admin use)
  */
 export async function getAllUserProfiles() {
+  if (!db) return [];
   try {
     const q = query(collection(db, USERS_COLLECTION), orderBy('createdAt', 'desc'));
     const snapshot = await withTimeout(getDocs(q));
