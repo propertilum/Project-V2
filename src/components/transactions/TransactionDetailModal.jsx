@@ -25,94 +25,94 @@ export default function TransactionDetailModal({
       icon={Receipt}
       maxWidth="max-w-md"
     >
-      <div className="space-y-6 text-xs text-slate-200">
+      <div className="space-y-5 text-xs text-[#F5F5F7]">
         {/* Merchant & Amount Hero */}
-        <div className="text-center py-5 bg-slate-950 rounded-2xl border border-[#262B33]">
-          <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">
+        <div className="text-center py-4 bg-[#2C2C2E]/60 rounded-[10px] border border-[#38383A]">
+          <div className="text-[10px] uppercase font-semibold text-[#8E8E93] tracking-wider mb-1 font-mono">
             {transaction.category}
           </div>
-          <div className="text-xl font-bold text-white mb-1 tracking-tight">{transaction.merchant}</div>
-          <div className={`text-3xl font-mono font-extrabold ${isCredit ? 'text-emerald-400' : 'text-white'}`}>
+          <div className="text-xl font-bold text-[#F5F5F7] mb-1 tracking-tight">{transaction.merchant}</div>
+          <div className={`text-2xl font-mono font-semibold tabular-nums ${isCredit ? 'text-[#34C759]' : 'text-[#F5F5F7]'}`}>
             {isCredit ? `+${formatCurrency(transaction.amount)}` : `-${formatCurrency(transaction.amount)}`}
           </div>
-          <div className="mt-2.5 flex items-center justify-center gap-2">
-            <Badge variant={transaction.status === 'declined' ? 'rose' : isCredit ? 'emerald' : 'indigo'} size="xs">
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <Badge variant={transaction.status === 'declined' ? 'red' : isCredit ? 'green' : 'blue'} size="xs">
               <CheckCircle className="w-3 h-3" />
               <span>{transaction.status}</span>
             </Badge>
-            <span className="text-[11px] text-slate-400 font-mono">{transaction.date}</span>
+            <span className="text-[11px] text-[#8E8E93] font-mono">{transaction.date}</span>
           </div>
         </div>
 
         {/* Ledger Breakdown Details */}
-        <div className="space-y-2.5 p-4 bg-slate-950/70 rounded-2xl border border-[#262B33] text-slate-300">
-          <div className="flex justify-between items-center py-1 border-b border-slate-800">
-            <span className="text-slate-400">Card Used</span>
-            <div className="flex items-center gap-1.5 font-bold text-white">
-              <CreditCard className="w-3.5 h-3.5 text-indigo-400" />
+        <div className="space-y-2 p-3.5 bg-[#2C2C2E]/60 rounded-[10px] border border-[#38383A] text-[#F5F5F7]">
+          <div className="flex justify-between items-center py-1 border-b border-[#38383A]">
+            <span className="text-[#8E8E93]">Card Used</span>
+            <div className="flex items-center gap-1.5 font-medium text-[#F5F5F7]">
+              <CreditCard className="w-3.5 h-3.5 text-[#0A84FF]" />
               <span>{transaction.cardName || 'Primary Executive Card'}</span>
             </div>
           </div>
 
-          <div className="flex justify-between items-center py-1 border-b border-slate-800">
-            <span className="text-slate-400">Channel / Method</span>
-            <span className="font-semibold text-white">{transaction.channel || 'Online Checkout'}</span>
+          <div className="flex justify-between items-center py-1 border-b border-[#38383A]">
+            <span className="text-[#8E8E93]">Channel / Method</span>
+            <span className="font-medium text-[#F5F5F7]">{transaction.channel || 'Online Checkout'}</span>
           </div>
 
-          <div className="flex justify-between items-center py-1 border-b border-slate-800">
-            <span className="text-slate-400">Terminal Location</span>
-            <div className="flex items-center gap-1 font-semibold text-white">
-              <MapPin className="w-3.5 h-3.5 text-slate-500" />
+          <div className="flex justify-between items-center py-1 border-b border-[#38383A]">
+            <span className="text-[#8E8E93]">Terminal Location</span>
+            <div className="flex items-center gap-1 font-medium text-[#F5F5F7]">
+              <MapPin className="w-3.5 h-3.5 text-[#8E8E93]" />
               <span>{transaction.location || 'Online Merchant Gateway'}</span>
             </div>
           </div>
 
-          <div className="flex justify-between items-center py-1 border-b border-slate-800">
-            <span className="text-slate-400">Merchant Category Code</span>
-            <span className="font-mono text-slate-300">{transaction.mcc || '5734 - Software'}</span>
+          <div className="flex justify-between items-center py-1 border-b border-[#38383A]">
+            <span className="text-[#8E8E93]">Merchant Category Code</span>
+            <span className="font-mono text-[#F5F5F7]">{transaction.mcc || '5734 - Software'}</span>
           </div>
 
           <div className="flex justify-between items-center py-1">
-            <span className="text-slate-400">Interchange / Processing Fee</span>
-            <span className="font-semibold text-emerald-400 font-mono">$0.00 (Waived)</span>
+            <span className="text-[#8E8E93]">Interchange / Processing Fee</span>
+            <span className="font-medium text-[#34C759] font-mono">$0.00 (Waived)</span>
           </div>
         </div>
 
         {/* Notes */}
         {transaction.notes && (
-          <div className="p-3 bg-indigo-950/30 border border-indigo-900/40 rounded-xl text-indigo-200">
-            <span className="font-bold block mb-0.5 text-[10px] uppercase tracking-wider text-indigo-400 font-mono">Metadata Memo</span>
-            <p className="text-[11px] leading-relaxed">{transaction.notes}</p>
+          <div className="p-3 bg-[#0A84FF]/10 border border-[#0A84FF]/20 rounded-[8px] text-[#0A84FF]">
+            <span className="font-semibold block mb-0.5 text-[10px] uppercase tracking-wider font-mono">Metadata Memo</span>
+            <p className="text-[11px] leading-relaxed text-[#F5F5F7]">{transaction.notes}</p>
           </div>
         )}
 
         {/* Actions */}
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2 pt-1">
           <div className="flex gap-2">
             <button
               onClick={() => {
                 window.print();
               }}
-              className="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 border border-[#262B33] text-slate-300 font-semibold rounded-xl transition flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 bg-[#2C2C2E] hover:bg-[#38383A] border border-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5"
             >
-              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <Download className="w-3.5 h-3.5 text-[#0A84FF]" />
               <span>Export Receipt</span>
             </button>
 
             {transaction.cardId && (
               <button
                 onClick={() => onFreezeCard(transaction.cardId)}
-                className="flex-1 py-2.5 bg-slate-900 hover:bg-rose-950/60 border border-[#262B33] hover:border-rose-800 text-slate-300 hover:text-rose-300 font-semibold rounded-xl transition flex items-center justify-center gap-1.5"
+                className="flex-1 py-2 bg-[#2C2C2E] hover:bg-[#FF453A]/20 border border-[#38383A] hover:border-[#FF453A]/40 text-[#FF453A] font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5"
               >
-                <Shield className="w-3.5 h-3.5 text-rose-400" />
-                <span>Freeze This Card</span>
+                <Shield className="w-3.5 h-3.5 text-[#FF453A]" />
+                <span>Freeze Card</span>
               </button>
             )}
           </div>
 
           <button
             onClick={() => onDispute(transaction)}
-            className="w-full py-2.5 text-slate-400 hover:text-rose-400 transition font-medium flex items-center justify-center gap-1.5 text-[11px]"
+            className="w-full py-2 text-[#8E8E93] hover:text-[#FF453A] transition font-medium flex items-center justify-center gap-1.5 text-[11px]"
           >
             <AlertTriangle className="w-3.5 h-3.5" />
             <span>Dispute or Report Suspicious Activity</span>

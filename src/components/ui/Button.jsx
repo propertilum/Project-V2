@@ -8,23 +8,23 @@ export default function Button({
   icon: Icon,
   ...props
 }) {
-  const base = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed select-none focus-visible:outline-none';
+  const base = 'inline-flex items-center justify-center font-medium rounded-[8px] transition-all duration-150 ease-out active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 select-none focus:outline-none';
 
   const variants = {
-    primary: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm shadow-indigo-600/20 active:bg-indigo-700',
-    secondary: 'bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80 active:bg-slate-850',
-    outline: 'bg-transparent hover:bg-slate-800/60 text-slate-300 border border-slate-700 active:bg-slate-800',
-    ghost: 'bg-transparent hover:bg-slate-800/60 text-slate-400 hover:text-slate-200',
-    danger: 'bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 shadow-sm active:bg-rose-950',
-    success: 'bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/50 shadow-sm',
-    accent: 'bg-[#6E8BFF] hover:bg-[#5C7CFA] text-slate-950 font-semibold shadow-sm',
+    primary: 'bg-[#0A84FF] hover:bg-[#0071E3] active:bg-[#0062C4] text-white',
+    secondary: 'bg-[#2C2C2E] hover:bg-[#38383A] active:bg-[#242426] text-[#F5F5F7] border border-[#38383A]',
+    outline: 'bg-transparent hover:bg-[#2C2C2E] active:bg-[#1C1C1E] text-[#F5F5F7] border border-[#38383A]',
+    ghost: 'bg-transparent hover:bg-[#2C2C2E] active:bg-[#1C1C1E] text-[#8E8E93] hover:text-[#F5F5F7]',
+    danger: 'bg-[#FF453A]/15 hover:bg-[#FF453A]/25 active:bg-[#FF453A]/30 text-[#FF453A] border border-[#FF453A]/30',
+    success: 'bg-[#34C759]/15 hover:bg-[#34C759]/25 active:bg-[#34C759]/30 text-[#34C759] border border-[#34C759]/30',
+    accent: 'bg-[#0A84FF] hover:bg-[#0071E3] active:bg-[#0062C4] text-white',
   };
 
   const sizes = {
     xs: 'text-[11px] px-2.5 py-1 gap-1.5',
-    sm: 'text-xs px-3 py-1.5 gap-2',
-    md: 'text-xs px-3.5 py-2 gap-2',
-    lg: 'text-sm px-4 py-2.5 gap-2.5',
+    sm: 'text-[12px] px-3 py-1.5 gap-2',
+    md: 'text-[13px] px-3.5 py-2 gap-2',
+    lg: 'text-[14px] px-4 py-2.5 gap-2.5',
   };
 
   return (
@@ -34,7 +34,7 @@ export default function Button({
       {...props}
     >
       {loading ? (
-        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <span className="w-3.5 h-3.5 border-[1.5px] border-current border-t-transparent rounded-full animate-spin" />
       ) : Icon ? (
         <Icon className="w-3.5 h-3.5 shrink-0" />
       ) : null}

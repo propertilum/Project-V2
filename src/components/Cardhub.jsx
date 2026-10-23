@@ -189,6 +189,23 @@ export default function Cardhub() {
 
   // ── Toast Feedback ──────────────────────────────────────────────────────────
   const [toast, setToast] = useState({ message: '', type: 'success' });
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDataLoaded(true);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleStepTransition = (nextStep) => {
+    setIsPageTransitioning(true);
+    setTimeout(() => {
+      setCurrentStep(nextStep);
+      setIsPageTransitioning(false);
+    }, 180);
+  };
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -356,45 +373,50 @@ export default function Cardhub() {
    * correctly by LoginPage (uses cached localStorage profile if Firestore fails).
    */
   const handleLoginSuccess = (user, role = 'customer') => {
+    setIsPageTransitioning(true);
     setCurrentUser(user);
 
-    if (role === 'admin' || user.role === 'admin') {
-      localStorage.setItem('cardhub_session', 'admin');
-      setCurrentStep('admin');
-      setSessions(buildCurrentSession());
-      showToast('Signed in as Administrator');
-      logActivity('Admin Session', 'Administrator signed in.', 'auth', 'warning');
-      return;
-    }
+    setTimeout(() => {
+      if (role === 'admin' || user.role === 'admin') {
+        localStorage.setItem('cardhub_session', 'admin');
+        setCurrentStep('admin');
+        setSessions(buildCurrentSession());
+        showToast('Signed in as Administrator');
+        logActivity('Admin Session', 'Administrator signed in.', 'auth', 'warning');
+        setIsPageTransitioning(false);
+        return;
+      }
 
-    // Keep admin users list in sync
-    setUsers((prev) => {
-      const exists = prev.some((u) => u.id === user.id || u.email === user.email);
-      return exists
-        ? prev.map((u) => (u.id === user.id ? { ...u, ...user } : u))
-        : [user, ...prev];
-    });
+      // Keep admin users list in sync
+      setUsers((prev) => {
+        const exists = prev.some((u) => u.id === user.id || u.email === user.email);
+        return exists
+          ? prev.map((u) => (u.id === user.id ? { ...u, ...user } : u))
+          : [user, ...prev];
+      });
 
-    const uid = user?.uid || user?.id;
+      const uid = user?.uid || user?.id;
 
-    // BUG-01 FIX: Load this specific user's data (other users' data is never touched)
-    loadUserSession(uid, user);
+      // BUG-01 FIX: Load this specific user's data (other users' data is never touched)
+      loadUserSession(uid, user);
 
-    if (user.isFirstLogin) {
-      localStorage.setItem('cardhub_session', 'first-time-setup');
-      setCurrentStep('first-time-setup');
-      showToast(`Welcome, ${user.name}! Set up your first virtual card to continue.`);
-      logActivity('Onboarding Started', `${user.name} began first-time card setup.`, 'auth', 'info');
-      return;
-    }
-
-    localStorage.setItem('cardhub_session', 'active');
-    setCurrentStep('dashboard');
-    showToast(`Welcome back, ${user.name}!`);
-    logActivity('Session Started', `${user.name} signed in.`, 'auth', 'info');
+      if (user.isFirstLogin) {
+        localStorage.setItem('cardhub_session', 'first-time-setup');
+        setCurrentStep('first-time-setup');
+        showToast(`Welcome, ${user.name}! Set up your first virtual card to continue.`);
+        logActivity('Onboarding Started', `${user.name} began first-time card setup.`, 'auth', 'info');
+      } else {
+        localStorage.setItem('cardhub_session', 'active');
+        setCurrentStep('dashboard');
+        showToast(`Welcome back, ${user.name}!`);
+        logActivity('Session Started', `${user.name} signed in.`, 'auth', 'info');
+      }
+      setIsPageTransitioning(false);
+    }, 200);
   };
 
   const handleSignupSuccess = (newUser) => {
+    setIsPageTransitioning(true);
     setUsers((prev) => {
       const exists = prev.some((u) => u.email === newUser.email);
       return exists ? prev : [newUser, ...prev];
@@ -403,9 +425,12 @@ export default function Cardhub() {
     const uid = newUser?.uid || newUser?.id;
     loadUserSession(uid, newUser); // fresh state for new user
     localStorage.setItem('cardhub_session', 'first-time-setup');
-    setCurrentStep('first-time-setup');
-    logActivity('New Account', `Account created for "${newUser.name}" (${newUser.email}).`, 'auth', 'info');
-    showToast('Account created! Set up your first card to get started.');
+    setTimeout(() => {
+      setCurrentStep('first-time-setup');
+      logActivity('New Account', `Account created for "${newUser.name}" (${newUser.email}).`, 'auth', 'info');
+      showToast('Account created! Set up your first card to get started.');
+      setIsPageTransitioning(false);
+    }, 200);
   };
 
   const handleFirstTimeSetupComplete = (newCard) => {
@@ -427,10 +452,10 @@ export default function Cardhub() {
       (u.id === currentUser?.id || u.email === currentUser?.email) ? updatedUser : u
     ));
 
-    // 3. Persist and navigate
+    // 3. Persist and navigate with transition
     localStorage.setItem('cardhub_session', 'active');
     localStorage.setItem('cardhub_current_user', JSON.stringify(updatedUser));
-    setCurrentStep('dashboard');
+    handleStepTransition('dashboard');
 
     logActivity(
       'Card Activated',
@@ -470,7 +495,7 @@ export default function Cardhub() {
         updateUserProfile(uid, { isFirstLogin: false }).catch(() => {});
       }
     }
-    setCurrentStep('dashboard');
+    handleStepTransition('dashboard');
     showToast('Setup skipped. You can issue cards anytime from the dashboard.');
   };
 
@@ -479,30 +504,34 @@ export default function Cardhub() {
    * state so the next user (or the same user logging back in) starts clean.
    */
   const handleLogout = async () => {
+    setIsPageTransitioning(true);
     try {
       await signOut();
     } catch (err) {
       console.warn('[CardHub] Firebase sign-out notice:', err);
     }
 
-    localStorage.removeItem('cardhub_session');
-    localStorage.removeItem('cardhub_current_user');
+    setTimeout(() => {
+      localStorage.removeItem('cardhub_session');
+      localStorage.removeItem('cardhub_current_user');
 
-    // Reset all per-user state
-    setCurrentUser(null);
-    setCards([]);
-    setWalletBalance(0);
-    setTransactions([]);
-    setSubscriptions([]);
-    setActivityLogs([]);
-    setSettings(DEFAULT_SETTINGS);
-    setSessions([]);
-    setActiveCardId('');
-    setTransactionFilter('');
+      // Reset all per-user state
+      setCurrentUser(null);
+      setCards([]);
+      setWalletBalance(0);
+      setTransactions([]);
+      setSubscriptions([]);
+      setActivityLogs([]);
+      setSettings(DEFAULT_SETTINGS);
+      setSessions([]);
+      setActiveCardId('');
+      setTransactionFilter('');
 
-    setCurrentStep('login');
-    setActiveTab('overview');
-    showToast('Session locked and signed out', 'info');
+      setCurrentStep('login');
+      setActiveTab('overview');
+      showToast('Session locked and signed out', 'info');
+      setIsPageTransitioning(false);
+    }, 200);
   };
 
   // ── Admin Handlers ──────────────────────────────────────────────────────────
@@ -820,56 +849,56 @@ export default function Cardhub() {
   // ── Step: Signup ────────────────────────────────────────────────────────────
   if (currentStep === 'signup') {
     return (
-      <>
+      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
         <SignupPage
           onSignupSuccess={handleSignupSuccess}
-          onGoToLogin={() => setCurrentStep('login')}
+          onGoToLogin={() => handleStepTransition('login')}
           onGoToAdminLogin={() => {
             localStorage.setItem('cardhub_session', 'admin');
-            setCurrentStep('admin');
+            handleStepTransition('admin');
           }}
         />
-      </>
+      </div>
     );
   }
 
   // ── Step: Login ─────────────────────────────────────────────────────────────
   if (currentStep === 'login') {
     return (
-      <>
+      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
         <LoginPage
           onLoginSuccess={handleLoginSuccess}
-          onGoToSignup={() => setCurrentStep('signup')}
+          onGoToSignup={() => handleStepTransition('signup')}
           onDirectAdminLogin={() => {
             localStorage.setItem('cardhub_session', 'admin');
-            setCurrentStep('admin');
+            handleStepTransition('admin');
           }}
           registeredUsers={users}
         />
-      </>
+      </div>
     );
   }
 
   // ── Step: First-Time Card Setup ─────────────────────────────────────────────
   if (currentStep === 'first-time-setup') {
     return (
-      <>
+      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
         <FirstTimeCardSetup
           user={currentUser}
           onCompleteSetup={handleFirstTimeSetupComplete}
           onSkipSetup={handleSkipFirstTimeSetup}
         />
-      </>
+      </div>
     );
   }
 
   // ── Step: Admin Dashboard ───────────────────────────────────────────────────
   if (currentStep === 'admin') {
     return (
-      <>
+      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
         <AdminDashboard
           users={users}
@@ -881,13 +910,13 @@ export default function Cardhub() {
           onSwitchToCustomerView={handleSwitchToCustomerView}
           onLogout={handleLogout}
         />
-      </>
+      </div>
     );
   }
 
   // ── Main Dashboard ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0B0D10] text-[#F3F4F6] flex flex-col md:flex-row font-sans antialiased selection:bg-indigo-600 selection:text-white">
+    <div className={`h-screen w-full overflow-hidden bg-[#000000] text-[#F5F5F7] flex flex-col md:flex-row font-sans antialiased selection:bg-[#0A84FF] selection:text-white ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
       {/* Toast Alert Feed */}
       <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
 
@@ -960,18 +989,20 @@ export default function Cardhub() {
       />
 
       {/* Main Command Workspace */}
-      <main className="flex-1 p-5 sm:p-8 lg:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
+      <main className="flex-1 h-screen overflow-y-auto p-5 sm:p-8 lg:p-10 w-full max-w-7xl mx-auto flex flex-col">
         {/* Top Header */}
         <Header
           activeTab={activeTab}
           currentUser={currentUser}
           walletBalance={walletBalance}
+          openAlertsCount={getUnresolvedAlertsCount(alerts)}
           onOpenTopUp={() => setIsTopUpOpen(true)}
           onOpenChat={() => setIsChatOpen(true)}
           onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           onPanicFreezeAll={handlePanicFreezeAll}
           allCardsFrozen={allCardsFrozen}
           onGoToAdmin={handleGoToAdmin}
+          onNavigateTab={(tab) => setActiveTab(tab)}
         />
 
         {/* Security Email Verification Notice Banner */}
@@ -998,6 +1029,7 @@ export default function Cardhub() {
             onSelectTransaction={(tx) => setInspectedTransaction(tx)}
             onNavigateTab={(tab) => setActiveTab(tab)}
             onCopy={handleCopy}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1005,11 +1037,11 @@ export default function Cardhub() {
         {activeTab === 'my-cards' && (
           <MyCardsTab
             cards={cards}
-            onOpenNewCard={() => setIsNewCardModalOpen(true)}
-            onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
             onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
             onUpdateCard={handleUpdateCard}
+            onNavigateTab={(tab) => setActiveTab(tab)}
             showToast={showToast}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1022,6 +1054,7 @@ export default function Cardhub() {
             onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
             onUpdateCard={handleUpdateCard}
             showToast={showToast}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1033,6 +1066,7 @@ export default function Cardhub() {
             onSelectTransaction={(tx) => setInspectedTransaction(tx)}
             initialFilter={transactionFilter}
             onFilterCleared={() => setTransactionFilter('')}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1044,6 +1078,7 @@ export default function Cardhub() {
             onUpdateAlertStatus={handleUpdateAlertStatus}
             onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
             onNavigateTab={(tab) => setActiveTab(tab)}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1066,6 +1101,7 @@ export default function Cardhub() {
             onSyncConnection={handleSyncConnection}
             onDisconnectConnection={handleDisconnectConnection}
             showToast={showToast}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1083,6 +1119,7 @@ export default function Cardhub() {
           <SpendingTab
             transactions={transactions}
             cards={cards}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1094,6 +1131,7 @@ export default function Cardhub() {
             onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
             onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
             onFilterMerchantHistory={handleFilterMerchantHistory}
+            isLoading={!isDataLoaded}
           />
         )}
 
@@ -1110,12 +1148,13 @@ export default function Cardhub() {
             allCardsFrozen={allCardsFrozen}
             onRevokeSession={handleRevokeSession}
             onUnfreezeCard={(cId) => handleUpdateCard(cId, { isLocked: false })}
+            isLoading={!isDataLoaded}
           />
         )}
 
         {/* Tab 12: Activity Timeline */}
         {activeTab === 'activity' && (
-          <ActivityTab activityLogs={activityLogs} />
+          <ActivityTab activityLogs={activityLogs} isLoading={!isDataLoaded} />
         )}
 
         {/* Tab 13: Account & Platform Settings */}
@@ -1128,6 +1167,7 @@ export default function Cardhub() {
             onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
             onResetData={handleResetData}
             onExportAllData={handleExportAllData}
+            isLoading={!isDataLoaded}
           />
         )}
       </main>

@@ -70,17 +70,17 @@ export default function RulesTab({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Explanation Banner */}
-      <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-5 rounded-[12px] bg-[#1C1C1E] border border-[#38383A] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="text-sm font-bold text-white tracking-tight">
+            <h2 className="text-sm font-semibold text-[#F5F5F7] tracking-tight">
               Spending Controls &amp; Enforcement Policy
             </h2>
-            <Badge variant="indigo" size="xs">Deterministic Engine</Badge>
+            <Badge variant="blue" size="xs">Deterministic Engine</Badge>
           </div>
-          <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+          <p className="text-xs text-[#8E8E93] max-w-2xl leading-relaxed">
             CardHub distinguishes between <strong>Provider Enforced</strong> rules (which decline transactions at the hardware processor level) and <strong>Monitoring Only</strong> rules (which alert after settlement but cannot decline linked bank charges).
           </p>
         </div>
@@ -96,15 +96,15 @@ export default function RulesTab({
       </div>
 
       {/* Interactive Simulation Sandbox */}
-      <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-900/50 shadow-xl">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+      <div className="p-5 sm:p-6 rounded-[12px] bg-[#1C1C1E] border border-[#38383A] shadow-sm">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#38383A]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+            <div className="w-8 h-8 rounded-[8px] bg-[#0A84FF]/10 border border-[#0A84FF]/20 flex items-center justify-center text-[#0A84FF]">
               <Play className="w-4 h-4 fill-current" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Interactive Transaction Simulator</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-sm font-semibold text-[#F5F5F7]">Interactive Transaction Simulator</h3>
+              <p className="text-xs text-[#8E8E93]">
                 Preview how an authorization event will be handled by active rules
               </p>
             </div>
@@ -112,16 +112,16 @@ export default function RulesTab({
           <Badge variant="demo" size="xs">Sandbox Tool</Badge>
         </div>
 
-        <form onSubmit={handleRunSimulation} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+        <form onSubmit={handleRunSimulation} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           {/* Select Card */}
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+            <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
               Target Card
             </label>
             <select
               value={simCardId}
               onChange={(e) => setSimCardId(e.target.value)}
-              className="w-full bg-slate-950 text-slate-200 px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
             >
               {cards.map((card) => (
                 <option key={card.id} value={card.id}>
@@ -133,22 +133,22 @@ export default function RulesTab({
 
           {/* Merchant Name */}
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+            <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
               Merchant Name
             </label>
             <input
               type="text"
               value={simMerchant}
               onChange={(e) => setSimMerchant(e.target.value)}
-              placeholder="e.g. Netflix, Amazon, Unknown Shop"
-              className="w-full bg-slate-950 text-slate-200 px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+              placeholder="e.g. Netflix, Amazon"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           {/* Amount */}
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-              Authorization Amount ($)
+            <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
+              Amount ($)
             </label>
             <input
               type="number"
@@ -156,19 +156,19 @@ export default function RulesTab({
               value={simAmount}
               onChange={(e) => setSimAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-slate-950 text-slate-200 px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+            <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
               Merchant Category
             </label>
             <select
               value={simCategory}
               onChange={(e) => setSimCategory(e.target.value)}
-              className="w-full bg-slate-950 text-slate-200 px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
             >
               <option value="Streaming">Streaming &amp; Subscriptions</option>
               <option value="E-Commerce">E-Commerce &amp; Retail</option>
@@ -179,15 +179,15 @@ export default function RulesTab({
           </div>
 
           {/* Toggles */}
-          <div className="sm:col-span-2 lg:col-span-3 flex items-center gap-6 pt-1 text-slate-300">
+          <div className="sm:col-span-2 lg:col-span-3 flex items-center gap-5 pt-1 text-[#F5F5F7]">
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={simIsOnline}
                 onChange={(e) => setSimIsOnline(e.target.checked)}
-                className="w-4 h-4 rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-0"
+                className="w-4 h-4 rounded bg-[#2C2C2E] border-[#38383A] text-[#0A84FF] focus:ring-0"
               />
-              <span>Online / E-Commerce Purchase</span>
+              <span>Online Purchase</span>
             </label>
 
             <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -195,7 +195,7 @@ export default function RulesTab({
                 type="checkbox"
                 checked={simIsInternational}
                 onChange={(e) => setSimIsInternational(e.target.checked)}
-                className="w-4 h-4 rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-0"
+                className="w-4 h-4 rounded bg-[#2C2C2E] border-[#38383A] text-[#0A84FF] focus:ring-0"
               />
               <span>International Currency</span>
             </label>
@@ -217,23 +217,23 @@ export default function RulesTab({
 
         {/* Simulation Result Panel */}
         {simResult && (
-          <div className={`mt-5 p-4 rounded-xl border transition-all text-xs ${
+          <div className={`mt-4 p-4 rounded-[8px] border transition-all text-xs ${
             simResult.decision === DECISIONS.ALLOWED
-              ? 'bg-emerald-950/30 border-emerald-800/60 text-emerald-200'
+              ? 'bg-[#34C759]/10 border-[#34C759]/30 text-[#34C759]'
               : simResult.decision === DECISIONS.DECLINED
-                ? 'bg-rose-950/30 border-rose-800/60 text-rose-200'
-                : 'bg-amber-950/30 border-amber-800/60 text-amber-200'
+                ? 'bg-[#FF453A]/10 border-[#FF453A]/30 text-[#FF453A]'
+                : 'bg-[#FF9F0A]/10 border-[#FF9F0A]/30 text-[#FF9F0A]'
           }`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-2 border-b border-current/20">
               <div className="flex items-center gap-2">
                 {simResult.decision === DECISIONS.ALLOWED ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-[#34C759]" />
                 ) : simResult.decision === DECISIONS.DECLINED ? (
-                  <XCircle className="w-4 h-4 text-rose-400" />
+                  <XCircle className="w-4 h-4 text-[#FF453A]" />
                 ) : (
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                  <AlertTriangle className="w-4 h-4 text-[#FF9F0A]" />
                 )}
-                <span className="font-bold tracking-tight uppercase">
+                <span className="font-semibold tracking-tight uppercase">
                   Simulation Outcome: {simResult.decision}
                 </span>
               </div>
@@ -242,14 +242,14 @@ export default function RulesTab({
               </Badge>
             </div>
 
-            <p className="font-medium mb-2 leading-relaxed">
+            <p className="font-medium mb-1.5 leading-relaxed text-[#F5F5F7]">
               {simResult.reason}
             </p>
 
-            <div className="text-[11px] opacity-80 font-mono space-y-0.5">
+            <div className="text-[11px] text-[#8E8E93] font-mono space-y-0.5">
               <div>Card: {activeCard?.label} (···{activeCard?.last4 || '4242'})</div>
               <div>Simulated Request: ${parseFloat(simAmount).toFixed(2)} at &quot;{simMerchant}&quot;</div>
-              <div className="text-[10px] opacity-70 mt-1">
+              <div className="text-[10px] text-[#636366] mt-1">
                 Note: This simulation evaluates local domain policy against recent totals and does not transmit to live banking rails.
               </div>
             </div>
@@ -257,34 +257,34 @@ export default function RulesTab({
         )}
       </div>
 
-      {/* Rules Filter Bar */}
-      <div className="flex items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      {/* Rules Filter Bar (macOS Segmented Control) */}
+      <div className="flex items-center justify-between gap-4 pb-2 border-b border-[#38383A]">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-500" />
-          <span className="text-xs font-semibold text-slate-300">Active Rules ({filteredRules.length})</span>
+          <Filter className="w-4 h-4 text-[#8E8E93]" />
+          <span className="text-xs font-semibold text-[#F5F5F7]">Active Rules ({filteredRules.length})</span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs">
+        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs">
           <button
             onClick={() => setFilterMode('all')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterMode === 'all' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+              filterMode === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             All Rules
           </button>
           <button
             onClick={() => setFilterMode('enforced')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterMode === 'enforced' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+              filterMode === 'enforced' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             Enforced by Provider
           </button>
           <button
             onClick={() => setFilterMode('monitoring')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterMode === 'monitoring' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+              filterMode === 'monitoring' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             Monitoring Only
@@ -301,14 +301,14 @@ export default function RulesTab({
           return (
             <div
               key={rule.id}
-              className={`p-4 rounded-xl border bg-slate-900 transition-all ${
-                rule.enabled ? 'border-slate-800 hover:border-slate-700' : 'border-slate-800/40 opacity-60'
+              className={`p-4 rounded-[12px] border bg-[#1C1C1E] transition-all ${
+                rule.enabled ? 'border-[#38383A] hover:border-[#38383A]/80' : 'border-[#38383A]/40 opacity-60'
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-white tracking-tight">
+                    <span className="text-sm font-semibold text-[#F5F5F7] tracking-tight">
                       {rule.name}
                     </span>
                     <Badge
@@ -327,11 +327,11 @@ export default function RulesTab({
                           ? 'Demo Simulation'
                           : 'Monitoring Only'}
                     </Badge>
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-[#8E8E93] font-mono">
                       · {rule.cardLabel}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-[#8E8E93] leading-relaxed">
                     {rule.description}
                   </p>
                 </div>
@@ -339,10 +339,10 @@ export default function RulesTab({
                 <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => onToggleRule?.(rule.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
+                    className={`px-3 py-1.5 rounded-[8px] text-xs font-semibold border transition duration-100 active:scale-[0.98] ${
                       rule.enabled
-                        ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50 hover:bg-emerald-900/50'
-                        : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+                        ? 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30 hover:bg-[#34C759]/25'
+                        : 'bg-[#2C2C2E] text-[#8E8E93] border-[#38383A] hover:text-[#F5F5F7]'
                     }`}
                   >
                     {rule.enabled ? 'Enabled' : 'Paused'}
@@ -351,7 +351,7 @@ export default function RulesTab({
               </div>
 
               {!isEnforced && !isDemo && (
-                <div className="mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] text-amber-400/90 flex items-center gap-1.5 font-mono">
+                <div className="mt-2.5 pt-2 border-t border-[#38383A] text-[11px] text-[#FF9F0A] flex items-center gap-1.5 font-mono">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                   <span>
                     Monitoring-only rule: Can trigger an alert in CardHub, but cannot block the transaction at the bank.
@@ -407,40 +407,40 @@ function CreateRuleModal({ cards, onClose, onAddRule }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5 animate-scale-in">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="w-full max-w-lg bg-[#1C1C1E] border border-[#38383A] rounded-[14px] p-6 shadow-2xl space-y-5 animate-scale-in">
+        <div className="flex items-center justify-between pb-3 border-b border-[#38383A]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-[8px] bg-[#0A84FF]/10 text-[#0A84FF] border border-[#0A84FF]/20 flex items-center justify-center">
               <Shield className="w-4 h-4" />
             </div>
-            <h3 className="text-base font-bold text-white">Create Spending Rule</h3>
+            <h3 className="text-base font-semibold text-[#F5F5F7]">Create Spending Rule</h3>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-white p-1">
+          <button onClick={onClose} className="text-[#8E8E93] hover:text-[#F5F5F7] p-1">
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="text-slate-300 font-bold block mb-1">Rule Name</label>
+            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. AWS Billing Hard Cap"
-              className="w-full bg-slate-950 text-white px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-slate-300 font-bold block mb-1">Target Card</label>
+              <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Target Card</label>
               <select
                 value={cardId}
                 onChange={(e) => setCardId(e.target.value)}
-                className="w-full bg-slate-950 text-white px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
               >
                 {cards.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -451,11 +451,11 @@ function CreateRuleModal({ cards, onClose, onAddRule }) {
             </div>
 
             <div>
-              <label className="text-slate-300 font-bold block mb-1">Rule Type</label>
+              <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Type</label>
               <select
                 value={ruleType}
                 onChange={(e) => setRuleType(e.target.value)}
-                className="w-full bg-slate-950 text-white px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
               >
                 <option value="max_per_tx">Maximum Per Transaction</option>
                 <option value="monthly_budget">Monthly Budget Cap</option>
@@ -465,24 +465,24 @@ function CreateRuleModal({ cards, onClose, onAddRule }) {
           </div>
 
           <div>
-            <label className="text-slate-300 font-bold block mb-1">Threshold Amount ($)</label>
+            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Threshold Amount ($)</label>
             <input
               type="number"
               step="0.01"
               required
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="w-full bg-slate-950 text-white px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono"
             />
           </div>
 
           {/* Transparent Enforcement Mode Notice */}
-          <div className={`p-3 rounded-xl border text-[11px] leading-relaxed ${
+          <div className={`p-3 rounded-[8px] border text-[11px] leading-relaxed ${
             isBankCard
-              ? 'bg-amber-950/20 border-amber-800/40 text-amber-300'
-              : 'bg-emerald-950/20 border-emerald-800/40 text-emerald-300'
+              ? 'bg-[#FF9F0A]/10 border-[#FF9F0A]/30 text-[#FF9F0A]'
+              : 'bg-[#34C759]/10 border-[#34C759]/30 text-[#34C759]'
           }`}>
-            <span className="font-bold block mb-0.5">
+            <span className="font-semibold block mb-0.5">
               Enforcement Mode: {isBankCard ? 'Monitoring Only' : 'Hardware Provider Enforced'}
             </span>
             {isBankCard
@@ -490,7 +490,7 @@ function CreateRuleModal({ cards, onClose, onAddRule }) {
               : 'This is a CardHub virtual card. Transactions exceeding this limit will be declined in real-time by the issuing gateway.'}
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#38383A]">
             <Button type="button" variant="ghost" size="sm" onClick={onClose}>
               Cancel
             </Button>

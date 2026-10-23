@@ -80,70 +80,70 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
       maxWidth="max-w-lg"
     >
       {step === 1 ? (
-        <form onSubmit={handleNext} className="space-y-5 text-xs text-slate-200">
+        <form onSubmit={handleNext} className="space-y-4 text-xs text-[#F5F5F7]">
           <div>
-            <label className="block font-bold text-slate-200 mb-1.5">
-              Card Purpose / Nickname <span className="text-rose-400">*</span>
+            <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">
+              Card Purpose / Nickname <span className="text-[#FF453A]">*</span>
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Free Trial Protection, Subscriptions, One-Time Checkout"
+              placeholder="e.g. Free Trial Protection, One-Time Checkout"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-[#262B33] rounded-xl text-white focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#FF453A]"
             />
           </div>
 
           <div>
-            <label className="block font-bold text-slate-200 mb-1.5">Usage Mode</label>
+            <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Usage Mode</label>
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
                 onClick={() => setUsageType('single')}
-                className={`p-3 rounded-xl border text-left transition flex flex-col gap-1 ${
+                className={`p-3 rounded-[8px] border text-left transition duration-100 flex flex-col gap-1 ${
                   usageType === 'single'
-                    ? 'border-rose-500 bg-rose-500/10 ring-1 ring-rose-500'
-                    : 'border-[#262B33] hover:border-slate-700 bg-slate-950/60'
+                    ? 'border-[#FF453A] bg-[#FF453A]/10 ring-1 ring-[#FF453A]'
+                    : 'border-[#38383A] hover:border-[#38383A]/80 bg-[#2C2C2E]/60'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">One-Time Use</span>
-                  <Zap className="w-3.5 h-3.5 text-rose-400" />
+                  <span className="font-semibold text-[#F5F5F7]">One-Time Use</span>
+                  <Zap className="w-3.5 h-3.5 text-[#FF453A]" />
                 </div>
-                <span className="text-[11px] text-slate-400">Auto-destroys immediately after the first transaction.</span>
+                <span className="text-[11px] text-[#8E8E93]">Auto-destroys immediately after the first transaction.</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setUsageType('multi')}
-                className={`p-3 rounded-xl border text-left transition flex flex-col gap-1 ${
+                className={`p-3 rounded-[8px] border text-left transition duration-100 flex flex-col gap-1 ${
                   usageType === 'multi'
-                    ? 'border-rose-500 bg-rose-500/10 ring-1 ring-rose-500'
-                    : 'border-[#262B33] hover:border-slate-700 bg-slate-950/60'
+                    ? 'border-[#FF453A] bg-[#FF453A]/10 ring-1 ring-[#FF453A]'
+                    : 'border-[#38383A] hover:border-[#38383A]/80 bg-[#2C2C2E]/60'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">Multi-Use Window</span>
-                  <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="font-semibold text-[#F5F5F7]">Multi-Use Window</span>
+                  <Clock className="w-3.5 h-3.5 text-[#0A84FF]" />
                 </div>
-                <span className="text-[11px] text-slate-400">Allows multiple charges up to the limit until time expires.</span>
+                <span className="text-[11px] text-[#8E8E93]">Allows multiple charges up to the limit until time expires.</span>
               </button>
             </div>
           </div>
 
           <div>
-            <label className="block font-bold text-slate-200 mb-1.5">Lifespan &amp; Expiration</label>
+            <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Lifespan &amp; Expiration</label>
             <div className="grid grid-cols-4 gap-2">
               {Object.entries(durationLabels).map(([key, item]) => (
                 <button
                   key={key}
                   type="button"
                   onClick={() => setDuration(key)}
-                  className={`py-2 px-1 rounded-xl font-bold border text-center transition ${
+                  className={`py-2 px-1 rounded-[8px] font-medium border text-center transition duration-100 ${
                     duration === key
-                      ? 'border-rose-500 bg-rose-500/20 text-rose-300 ring-1 ring-rose-500'
-                      : 'border-[#262B33] bg-slate-950 text-slate-400 hover:text-white'
+                      ? 'border-[#FF453A] bg-[#FF453A]/20 text-[#FF453A] ring-1 ring-[#FF453A]'
+                      : 'border-[#38383A] bg-[#2C2C2E] text-[#8E8E93] hover:text-[#F5F5F7]'
                   }`}
                 >
                   {item.text}
@@ -153,17 +153,17 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
           </div>
 
           <div>
-            <label className="block font-bold text-slate-200 mb-1.5">Maximum Spend Limit ($)</label>
+            <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Maximum Spend Limit ($)</label>
             <div className="grid grid-cols-4 gap-2 mb-2">
               {['25', '50', '100', '250'].map((val) => (
                 <button
                   key={val}
                   type="button"
                   onClick={() => setLimit(val)}
-                  className={`py-2 rounded-xl font-bold border transition ${
+                  className={`py-1.5 rounded-[8px] font-medium border transition duration-100 ${
                     limit === val
-                      ? 'border-rose-500 bg-rose-500/20 text-rose-300'
-                      : 'border-[#262B33] bg-slate-950 text-slate-400 hover:text-white'
+                      ? 'border-[#FF453A] bg-[#FF453A]/20 text-[#FF453A]'
+                      : 'border-[#38383A] bg-[#2C2C2E] text-[#8E8E93] hover:text-[#F5F5F7]'
                   }`}
                 >
                   ${val}
@@ -171,33 +171,33 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
               ))}
             </div>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 font-medium text-[#8E8E93]">$</span>
               <input
                 type="number"
                 min="5"
                 max="1000"
                 value={limit}
                 onChange={(e) => setLimit(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 bg-slate-950 border border-[#262B33] rounded-xl font-bold text-white focus:outline-none focus:border-rose-500 font-mono"
+                className="w-full pl-7 pr-3 py-1.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#FF453A] font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-bold text-slate-200 mb-1.5">Merchant Restriction (Optional)</label>
+            <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Merchant Restriction (Optional)</label>
             <input
               type="text"
               placeholder="e.g. Only accept Figma.com charges"
               value={merchantLock}
               onChange={(e) => setMerchantLock(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-[#262B33] rounded-xl text-white focus:outline-none focus:border-rose-500"
+              className="w-full px-3.5 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#FF453A]"
             />
           </div>
 
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-[#FF453A] hover:bg-[#E03A30] text-white font-medium rounded-[8px] transition duration-100 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2"
             >
               <span>Review Guardrails</span>
               <ArrowRight className="w-4 h-4" />
@@ -205,36 +205,36 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
           </div>
         </form>
       ) : (
-        <div className="space-y-5 text-xs text-slate-200">
-          <div className="p-4 bg-rose-950/30 border border-rose-900/40 rounded-2xl space-y-3">
-            <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
+        <div className="space-y-4 text-xs text-[#F5F5F7]">
+          <div className="p-4 bg-[#FF453A]/10 border border-[#FF453A]/25 rounded-[10px] space-y-2.5">
+            <div className="flex items-center gap-2 text-[#FF453A] font-semibold text-sm">
               <Shield className="w-4 h-4" />
               <span>Isolated Burner Guardrails</span>
             </div>
             
-            <ul className="space-y-2 text-slate-300 text-[11px]">
+            <ul className="space-y-2 text-[#8E8E93] text-[11px]">
               <li className="flex items-start gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
-                <span>
+                <CheckCircle className="w-3.5 h-3.5 text-[#34C759] mt-0.5 shrink-0" />
+                <span className="text-[#F5F5F7]">
                   <strong>Spend Cap:</strong> Charges above <strong>${limit}.00</strong> will be automatically declined.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
-                <span>
-                  <strong>Expiration:</strong> Card expires in <strong>{durationLabels[duration].text}</strong>. Any subsequent recurring charge attempts will be blocked.
+                <CheckCircle className="w-3.5 h-3.5 text-[#34C759] mt-0.5 shrink-0" />
+                <span className="text-[#F5F5F7]">
+                  <strong>Expiration:</strong> Card expires in <strong>{durationLabels[duration].text}</strong>.
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
-                <span>
+                <CheckCircle className="w-3.5 h-3.5 text-[#34C759] mt-0.5 shrink-0" />
+                <span className="text-[#F5F5F7]">
                   <strong>Channel Restrictions:</strong> ATM withdrawals and international usage are permanently locked to <strong>OFF</strong>.
                 </span>
               </li>
               {merchantLock && (
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>
+                  <CheckCircle className="w-3.5 h-3.5 text-[#34C759] mt-0.5 shrink-0" />
+                  <span className="text-[#F5F5F7]">
                     <strong>Locked Purpose:</strong> Restricted to <em>{merchantLock}</em>.
                   </span>
                 </li>
@@ -242,7 +242,7 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
             </ul>
           </div>
 
-          <div className="p-3 bg-slate-950 rounded-xl border border-[#262B33] flex items-center justify-between text-slate-300">
+          <div className="p-3 bg-[#2C2C2E]/60 rounded-[8px] border border-[#38383A] flex items-center justify-between text-[#8E8E93]">
             <span className="font-medium">Selected Network</span>
             <div className="flex gap-2">
               {['VISA', 'Mastercard'].map((b) => (
@@ -250,8 +250,8 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
                   key={b}
                   type="button"
                   onClick={() => setBrand(b)}
-                  className={`px-3 py-1 rounded-lg font-bold text-xs border transition ${
-                    brand === b ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-slate-900 text-slate-400 border-slate-800'
+                  className={`px-3 py-1 rounded-[6px] font-medium text-xs border transition duration-100 ${
+                    brand === b ? 'bg-[#0A84FF] text-white border-[#0A84FF]' : 'bg-[#2C2C2E] text-[#8E8E93] border-[#38383A]'
                   }`}
                 >
                   {b}
@@ -264,14 +264,14 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="py-3 px-4 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#262B33] font-bold rounded-xl transition"
+              className="py-2 px-3.5 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] border border-[#38383A] font-medium rounded-[8px] transition duration-100 active:scale-[0.98]"
             >
               Back
             </button>
             <button
               type="button"
               onClick={handleConfirmIssue}
-              className="flex-1 py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2"
+              className="flex-1 py-2 bg-[#FF453A] hover:bg-[#E03A30] text-white font-medium rounded-[8px] transition duration-100 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2"
             >
               <Flame className="w-4 h-4" />
               <span>Issue Single-Use Card Now</span>

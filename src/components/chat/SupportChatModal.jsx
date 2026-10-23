@@ -47,38 +47,38 @@ export default function SupportChatModal({ isOpen, onClose, walletBalance }) {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-[#111418] rounded-2xl shadow-2xl border border-[#262B33] overflow-hidden flex flex-col h-[500px] animate-in fade-in slide-in-from-bottom-6 duration-200">
+    <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-[#1C1C1E] rounded-[16px] shadow-2xl border border-[#38383A] overflow-hidden flex flex-col h-[500px] animate-in fade-in slide-in-from-bottom-4 duration-200">
       {/* Header */}
-      <div className="bg-[#14181F] text-white p-4 flex justify-between items-center border-b border-[#262B33]">
+      <div className="bg-[#2C2C2E]/80 text-white p-3.5 flex justify-between items-center border-b border-[#38383A]">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-            <Sparkles className="w-4 h-4 text-indigo-400" />
+          <div className="w-7 h-7 rounded-[8px] bg-[#0A84FF]/15 border border-[#0A84FF]/30 flex items-center justify-center text-[#0A84FF]">
+            <Sparkles className="w-4 h-4 text-[#0A84FF]" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-xs">CardHub Security Assistant</span>
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+              <span className="font-semibold text-[13px] text-white">CardHub Assistant</span>
+              <span className="w-1.5 h-1.5 bg-[#34C759] rounded-full"></span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">Telemetry AI Agent</span>
+            <span className="text-[10px] text-[#8E8E93] font-mono">Security Telemetry</span>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+          className="text-[#8E8E93] hover:text-white p-1 rounded-[6px] hover:bg-[#38383A] transition"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#0B0D10] text-xs">
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#1C1C1E] text-[12px]">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div
-              className={`p-3.5 rounded-2xl max-w-[85%] leading-relaxed ${
+              className={`p-3 rounded-[12px] max-w-[85%] leading-relaxed ${
                 msg.sender === 'user'
-                  ? 'bg-indigo-600 text-white rounded-tr-none'
-                  : 'bg-[#171B21] border border-[#262B33] text-slate-200 rounded-tl-none shadow-sm'
+                  ? 'bg-[#0A84FF] text-white rounded-br-sm'
+                  : 'bg-[#2C2C2E] border border-[#38383A] text-[#F5F5F7] rounded-bl-sm'
               }`}
             >
               {msg.text}
@@ -88,12 +88,12 @@ export default function SupportChatModal({ isOpen, onClose, walletBalance }) {
       </div>
 
       {/* Quick Prompts */}
-      <div className="px-3 py-2 bg-[#14181F] border-t border-[#1F242C] flex gap-1.5 overflow-x-auto no-scrollbar">
+      <div className="px-3 py-2 bg-[#2C2C2E]/50 border-t border-[#38383A] flex gap-1.5 overflow-x-auto no-scrollbar">
         {quickPrompts.map((prompt, i) => (
           <button
             key={i}
             onClick={() => handleSend(prompt)}
-            className="shrink-0 text-[10px] bg-slate-900 hover:bg-indigo-950/60 hover:text-indigo-300 text-slate-300 font-medium px-2.5 py-1 rounded-full transition border border-[#262B33]"
+            className="shrink-0 text-[10px] bg-[#2C2C2E] hover:bg-[#38383A] text-[#8E8E93] hover:text-[#F5F5F7] font-medium px-2.5 py-1 rounded-full transition border border-[#38383A]"
           >
             {prompt}
           </button>
@@ -103,19 +103,19 @@ export default function SupportChatModal({ isOpen, onClose, walletBalance }) {
       {/* Input */}
       <form
         onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-        className="p-3 border-t border-[#262B33] bg-[#14181F] flex gap-2"
+        className="p-3 border-t border-[#38383A] bg-[#2C2C2E]/80 flex gap-2"
       >
         <input
           type="text"
-          placeholder="Ask anything about cards & limits..."
+          placeholder="Ask anything about cards &amp; limits..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 bg-slate-950 text-xs px-3 py-2.5 rounded-xl border border-[#262B33] focus:outline-none focus:border-indigo-500 text-white"
+          className="flex-1 bg-[#1C1C1E] text-[12px] px-3 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-white placeholder-[#8E8E93]"
         />
         <button
           type="submit"
           disabled={!input.trim()}
-          className="p-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl transition shadow-sm"
+          className="p-2 bg-[#0A84FF] hover:bg-[#0071E3] active:scale-[0.98] disabled:opacity-40 text-white rounded-[8px] transition"
         >
           <Send className="w-4 h-4" />
         </button>

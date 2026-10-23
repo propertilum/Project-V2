@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import { SkeletonTable } from '../ui/Skeleton';
 import { formatCurrency } from '../../utils/formatters';
 import { CATEGORIES } from '../../data/constants';
 
@@ -13,6 +14,7 @@ export default function TransactionsTab({
   cards = [],
   onSelectTransaction,
   initialFilter = '',
+  isLoading = false,
   onFilterCleared,
 }) {
   const [search, setSearch] = useState(initialFilter);
@@ -100,37 +102,37 @@ export default function TransactionsTab({
   return (
     <div className="space-y-6">
       {/* 1. Header Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
+        <div className="bg-[#1C1C1E] p-4 rounded-[12px] border border-[#38383A] shadow-sm">
+          <span className="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider block font-mono">
             Filtered Outflow Volume
           </span>
-          <div className="text-2xl font-black text-white font-mono mt-1">
+          <div className="text-2xl font-semibold text-[#F5F5F7] font-mono mt-1 tabular-nums">
             {formatCurrency(totalDebits)}
           </div>
-          <span className="text-[10px] text-slate-500 font-medium">Cleared and authorized debits</span>
+          <span className="text-[10px] text-[#8E8E93]">Cleared and authorized debits</span>
         </div>
 
-        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+        <div className="bg-[#1C1C1E] p-4 rounded-[12px] border border-[#38383A] shadow-sm">
+          <span className="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider block font-mono">
             Protected / Declined Volume
           </span>
-          <div className="text-2xl font-black text-rose-400 font-mono mt-1">
+          <div className="text-2xl font-semibold text-[#FF453A] font-mono mt-1 tabular-nums">
             {formatCurrency(totalDeclined)}
           </div>
-          <span className="text-[10px] text-slate-500 font-medium">Blocked by spending boundaries</span>
+          <span className="text-[10px] text-[#8E8E93]">Blocked by spending boundaries</span>
         </div>
 
-        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div className="bg-[#1C1C1E] p-4 rounded-[12px] border border-[#38383A] shadow-sm flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+            <span className="text-[11px] font-medium text-[#8E8E93] uppercase tracking-wider block font-mono">
               Matched Records
             </span>
-            <div className="text-2xl font-black text-white font-mono mt-1">
+            <div className="text-2xl font-semibold text-[#F5F5F7] font-mono mt-1 tabular-nums">
               {filteredTransactions.length}{' '}
-              <span className="text-xs font-normal text-slate-500">/ {transactions.length}</span>
+              <span className="text-xs font-normal text-[#8E8E93]">/ {transactions.length}</span>
             </div>
-            <span className="text-[10px] text-slate-500 font-medium">Normalized telemetry events</span>
+            <span className="text-[10px] text-[#8E8E93]">Normalized telemetry events</span>
           </div>
 
           <Button
@@ -145,11 +147,11 @@ export default function TransactionsTab({
       </div>
 
       {/* 2. Search & Filtering Controls */}
-      <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
+      <div className="bg-[#1C1C1E] p-4 rounded-[12px] border border-[#38383A] space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 text-xs">
           {/* Search Input */}
           <div className="lg:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#8E8E93] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search merchant, auth code..."
@@ -158,12 +160,12 @@ export default function TransactionsTab({
                 setSearch(e.target.value);
                 if (!e.target.value && onFilterCleared) onFilterCleared();
               }}
-              className="w-full pl-8 pr-8 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500 text-xs"
+              className="w-full pl-8 pr-8 py-1.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF] text-xs"
             />
             {search && (
               <button
                 onClick={() => { setSearch(''); if (onFilterCleared) onFilterCleared(); }}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8E93] hover:text-[#F5F5F7]"
                 title="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
@@ -176,7 +178,7 @@ export default function TransactionsTab({
             <select
               value={selectedCardId}
               onChange={(e) => setSelectedCardId(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
             >
               <option value="all">All Cards</option>
               {cards.map((c) => (
@@ -192,7 +194,7 @@ export default function TransactionsTab({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -207,7 +209,7 @@ export default function TransactionsTab({
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
             >
               <option value="all">All Statuses</option>
               <option value="completed">Completed / Settled</option>
@@ -221,7 +223,7 @@ export default function TransactionsTab({
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
             >
               <option value="all">All Types</option>
               <option value="debit">Debits</option>
@@ -234,7 +236,7 @@ export default function TransactionsTab({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
             >
               <option value="date-desc">Newest First</option>
               <option value="date-asc">Oldest First</option>
@@ -246,14 +248,16 @@ export default function TransactionsTab({
       </div>
 
       {/* 3. Transaction Ledger Table */}
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
-        {filteredTransactions.length === 0 ? (
+      <div className="bg-[#1C1C1E] rounded-[12px] border border-[#38383A] shadow-sm overflow-hidden">
+        {isLoading ? (
+          <SkeletonTable rows={6} />
+        ) : filteredTransactions.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-[10px] bg-[#2C2C2E] text-[#8E8E93] flex items-center justify-center mx-auto">
               <Search className="w-6 h-6" />
             </div>
-            <h4 className="text-sm font-bold text-white">No matching transactions</h4>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+            <h4 className="text-sm font-semibold text-[#F5F5F7]">No matching transactions</h4>
+            <p className="text-xs text-[#8E8E93] max-w-sm mx-auto">
               No authorizations match the active search and filter parameters.
             </p>
             <Button
@@ -268,7 +272,7 @@ export default function TransactionsTab({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 uppercase font-semibold text-[10px] tracking-wider">
+                <tr className="border-b border-[#38383A] bg-[#2C2C2E]/60 text-[#8E8E93] uppercase font-mono text-[10px] tracking-wider">
                   <th className="py-3 px-5">Merchant / Destination</th>
                   <th className="py-3 px-4">Card Used</th>
                   <th className="py-3 px-4">Category</th>
@@ -277,7 +281,7 @@ export default function TransactionsTab({
                   <th className="py-3 px-5 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 font-medium">
+              <tbody className="divide-y divide-[#38383A]/60 font-normal">
                 {filteredTransactions.map((tx) => {
                   const isCredit = tx.type === 'credit';
                   const isDeclined = tx.status === 'declined';
@@ -288,58 +292,58 @@ export default function TransactionsTab({
                     <tr
                       key={tx.id}
                       onClick={() => onSelectTransaction?.(tx)}
-                      className="hover:bg-slate-800/40 transition cursor-pointer"
+                      className="hover:bg-[#2C2C2E]/60 transition cursor-pointer"
                     >
-                      <td className="py-3.5 px-5 flex items-center gap-3">
+                      <td className="py-3 px-5 flex items-center gap-3">
                         <div
-                          className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold shrink-0 ${
+                          className={`w-7 h-7 rounded-[6px] flex items-center justify-center font-medium shrink-0 ${
                             isDeclined
-                              ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                              ? 'bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30'
                               : isCredit
-                                ? 'bg-emerald-500/10 text-emerald-400'
-                                : 'bg-indigo-500/10 text-indigo-400'
+                                ? 'bg-[#34C759]/15 text-[#34C759]'
+                                : 'bg-[#2C2C2E] text-[#8E8E93]'
                           }`}
                         >
                           {isCredit ? (
-                            <ArrowDownLeft className="w-4 h-4" />
+                            <ArrowDownLeft className="w-3.5 h-3.5" />
                           ) : (
-                            <ArrowUpRight className="w-4 h-4" />
+                            <ArrowUpRight className="w-3.5 h-3.5" />
                           )}
                         </div>
                         <div>
-                          <span className={`font-bold block ${isDeclined ? 'text-rose-300' : 'text-white'}`}>
+                          <span className={`font-medium block ${isDeclined ? 'text-[#FF453A]' : 'text-[#F5F5F7]'}`}>
                             {tx.merchant}
                           </span>
                           {tx.authCode && (
-                            <span className="text-[10px] text-slate-500 font-mono">
+                            <span className="text-[10px] text-[#8E8E93] font-mono">
                               Auth: {tx.authCode}
                             </span>
                           )}
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-300">
+                      <td className="py-3 px-4 text-[#F5F5F7]">
                         <div className="flex items-center gap-1.5">
                           {isBank ? (
-                            <Building2 className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                            <Building2 className="w-3.5 h-3.5 text-[#0A84FF] shrink-0" />
                           ) : (
-                            <Layers className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                            <Layers className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
                           )}
                           <span>{tx.cardName || 'Primary Card'}</span>
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-400">{tx.category}</td>
-                      <td className="py-3.5 px-4 text-slate-500 font-mono text-[11px]">{tx.date}</td>
+                      <td className="py-3 px-4 text-[#8E8E93]">{tx.category}</td>
+                      <td className="py-3 px-4 text-[#636366] font-mono text-[11px]">{tx.date}</td>
 
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <Badge
                           variant={
                             isDeclined
-                              ? 'rose'
+                              ? 'red'
                               : tx.status === 'pending'
-                                ? 'amber'
-                                : 'emerald'
+                                ? 'orange'
+                                : 'green'
                           }
                           size="xs"
                         >
@@ -348,12 +352,12 @@ export default function TransactionsTab({
                       </td>
 
                       <td
-                        className={`py-3.5 px-5 text-right font-mono font-bold text-sm ${
+                        className={`py-3 px-5 text-right font-mono font-medium text-sm tabular-nums ${
                           isDeclined
-                            ? 'text-slate-500 line-through'
+                            ? 'text-[#636366] line-through'
                             : isCredit
-                              ? 'text-emerald-400'
-                              : 'text-white'
+                              ? 'text-[#34C759]'
+                              : 'text-[#F5F5F7]'
                         }`}
                       >
                         {isCredit

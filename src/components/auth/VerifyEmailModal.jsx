@@ -38,7 +38,6 @@ export default function VerifyEmailModal({
     }
   };
 
-  // BUG-03 FIX: Only real Firebase verification check — no bypass button
   const handleCheckStatus = async () => {
     if (isChecking) return;
     setIsChecking(true);
@@ -55,67 +54,63 @@ export default function VerifyEmailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 text-white text-center">
-        {/* Ambient Top Glow */}
-        <div className="absolute -top-20 -right-20 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-[#1C1C1E] border border-[#38383A] rounded-[16px] overflow-hidden p-6 text-white text-center">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+          className="absolute right-4 top-4 p-1.5 text-[#8E8E93] hover:text-white rounded-[8px] hover:bg-[#2C2C2E] transition"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Icon Header */}
-        <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center mx-auto mb-4 text-indigo-400 shadow-lg shadow-indigo-600/20">
-          <Mail className="w-8 h-8" />
+        <div className="w-12 h-12 rounded-[12px] bg-[#0A84FF]/15 border border-[#0A84FF]/30 flex items-center justify-center mx-auto mb-3.5 text-[#0A84FF]">
+          <Mail className="w-6 h-6" />
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-1">Verify Your Email</h3>
-        <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+        <h3 className="text-[17px] font-semibold text-white mb-1">Verify Your Email</h3>
+        <p className="text-[12px] text-[#8E8E93] mb-5 leading-relaxed">
           We've sent a verification link to:
-          <span className="block text-indigo-300 font-mono font-semibold mt-1">
+          <span className="block text-[#0A84FF] font-mono font-medium mt-1">
             {currentUser?.email || 'your email'}
           </span>
         </p>
 
         {/* Benefits Box */}
-        <div className="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4 mb-6 text-left space-y-2.5 text-xs text-slate-300">
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="bg-[#2C2C2E] border border-[#38383A] rounded-[8px] p-3.5 mb-5 text-left space-y-2 text-[12px] text-[#F5F5F7]">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
             <span>Removes daily transaction throttle limits</span>
           </div>
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
             <span>Enables international multi-currency settlement</span>
           </div>
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
             <span>Authorizes instant wallet top-ups over $1,000</span>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <button
             onClick={handleCheckStatus}
             disabled={isChecking}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition disabled:opacity-60"
+            className="w-full py-2.5 bg-[#0A84FF] hover:bg-[#0071E3] active:scale-[0.98] text-white font-medium rounded-[8px] text-[13px] flex items-center justify-center gap-2 transition disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isChecking ? 'animate-spin' : ''}`} />
             <span>{isChecking ? 'Checking Verification…' : "I've Clicked the Verification Link"}</span>
           </button>
 
           <button
             onClick={handleResend}
             disabled={isSending || cooldown > 0}
-            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-2 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] text-[#F5F5F7] font-medium rounded-[8px] text-[12px] border border-[#38383A] transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            <Mail className="w-4 h-4 text-slate-400" />
+            <Mail className="w-3.5 h-3.5 text-[#8E8E93]" />
             <span>{cooldown > 0 ? `Resend in ${cooldown}s` : isSending ? 'Sending…' : 'Resend Verification Email'}</span>
           </button>
         </div>

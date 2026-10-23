@@ -16,20 +16,20 @@ export default function CardStudioTab({
   if (!activeCard) return null;
 
   return (
-    <div className="bg-[#111418] rounded-2xl border border-[#262B33] p-6 md:p-8 shadow-lg space-y-8 text-slate-200">
+    <div className="bg-[#1C1C1E] rounded-[12px] border border-[#38383A] p-6 md:p-8 space-y-8 text-[#F5F5F7]">
       {/* Studio Header */}
-      <div className="border-b border-[#262B33] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="border-b border-[#38383A] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-400" />
+          <h2 className="text-[17px] font-semibold text-[#F5F5F7] flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-[#0A84FF]" />
             <span>Card Studio Customizer</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-[12px] text-[#8E8E93] mt-0.5">
             Calibrate visual physical card simulations, network branding, and client billing records.
           </p>
         </div>
 
-        <span className="text-xs font-mono font-bold text-indigo-400 bg-indigo-950/60 px-3 py-1.5 rounded-full border border-indigo-800/80 w-fit">
+        <span className="text-[11px] font-mono font-medium text-[#0A84FF] bg-[#0A84FF]/15 px-3 py-1.5 rounded-full border border-[#0A84FF]/30 w-fit">
           Editing: {activeCard.label}
         </span>
       </div>
@@ -38,7 +38,7 @@ export default function CardStudioTab({
         {/* Left Column: Live Sticky Card Canvas */}
         <div className="lg:col-span-5 flex flex-col items-center">
           <div className="sticky top-6 w-full max-w-sm space-y-4">
-            <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono text-center">
+            <span className="block text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider font-mono text-center">
               Real-Time Card Canvas
             </span>
 
@@ -48,24 +48,24 @@ export default function CardStudioTab({
               showCVV={showCVV}
             />
 
-            <div className="grid grid-cols-3 gap-2 text-xs">
+            <div className="grid grid-cols-3 gap-2 text-[12px]">
               <button
                 onClick={() => onCopy(activeCard.cardNumber, 'Card Number')}
-                className="py-2.5 bg-[#161B22] hover:bg-slate-800 text-slate-200 font-semibold rounded-xl border border-[#262B33] transition flex items-center justify-center gap-1.5"
+                className="py-2 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition flex items-center justify-center gap-1.5"
               >
-                <Copy className="w-3.5 h-3.5 text-indigo-400" />
+                <Copy className="w-3.5 h-3.5 text-[#0A84FF]" />
                 <span>Copy</span>
               </button>
               <button
                 onClick={() => setShowSensitive(!showSensitive)}
-                className="py-2.5 bg-[#161B22] hover:bg-slate-800 text-slate-200 font-semibold rounded-xl border border-[#262B33] transition flex items-center justify-center gap-1.5"
+                className="py-2 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition flex items-center justify-center gap-1.5"
               >
                 {showSensitive ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 <span>{showSensitive ? 'Hide' : 'Reveal'}</span>
               </button>
               <button
                 onClick={() => setShowCVV(!showCVV)}
-                className="py-2.5 bg-[#161B22] hover:bg-slate-800 text-slate-200 font-semibold rounded-xl border border-[#262B33] transition flex items-center justify-center gap-1.5"
+                className="py-2 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition flex items-center justify-center gap-1.5"
               >
                 <Lock className="w-3.5 h-3.5" />
                 <span>{showCVV ? 'Hide CVV' : 'Show CVV'}</span>
@@ -75,10 +75,10 @@ export default function CardStudioTab({
         </div>
 
         {/* Right Column: Customization Controls */}
-        <div className="lg:col-span-7 space-y-6 text-xs">
+        <div className="lg:col-span-7 space-y-6 text-[13px]">
           {/* 1. Theme Finishes */}
           <div>
-            <label className="block font-bold text-slate-300 font-mono text-[11px] uppercase tracking-wider mb-2.5">
+            <label className="block font-medium text-[#8E8E93] text-[11px] uppercase tracking-wider mb-2.5">
               1. Card Finish Theme
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -86,14 +86,14 @@ export default function CardStudioTab({
                 <button
                   key={t.id}
                   onClick={() => onUpdateActiveCard({ theme: t.id })}
-                  className={`p-3 rounded-xl border flex items-center space-x-2.5 transition text-left ${
+                  className={`p-3 rounded-[8px] border flex items-center space-x-2.5 transition active:scale-[0.98] text-left ${
                     activeCard.theme === t.id
-                      ? 'border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/40 text-white'
-                      : 'border-[#262B33] hover:border-slate-700 bg-[#161B22] text-slate-300'
+                      ? 'border-[#0A84FF] bg-[#0A84FF]/10 text-white'
+                      : 'border-[#38383A] hover:border-[#48484A] bg-[#2C2C2E] text-[#8E8E93]'
                   }`}
                 >
-                  <div className={`w-5 h-5 rounded-full ${t.bg} border border-slate-700 shadow-sm shrink-0`}></div>
-                  <span className="font-bold truncate">{t.name}</span>
+                  <div className={`w-5 h-5 rounded-full ${t.bg} border border-[#38383A] shadow-sm shrink-0`}></div>
+                  <span className="font-medium text-[13px] truncate">{t.name}</span>
                 </button>
               ))}
             </div>
@@ -101,23 +101,24 @@ export default function CardStudioTab({
 
           {/* 2. Textures */}
           <div>
-            <label className="block font-bold text-slate-300 font-mono text-[11px] uppercase tracking-wider mb-2.5">
+            <label className="block font-medium text-[#8E8E93] text-[11px] uppercase tracking-wider mb-2.5">
               2. Holographic Surface Texture
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {[
+                { id: 'circuit', name: 'Circuit Grid' },
+                { id: 'dots', name: 'Dot Matrix' },
+                { id: 'lines', name: 'Laser Lines' },
                 { id: 'waves', name: 'Wave Radial' },
-                { id: 'dots', name: 'Dot Grid' },
-                { id: 'lines', name: 'Micro Lines' },
                 { id: 'none', name: 'Clean Solid' },
               ].map((tex) => (
                 <button
                   key={tex.id}
                   onClick={() => onUpdateActiveCard({ texture: tex.id })}
-                  className={`py-2 px-3 rounded-xl border font-bold text-center transition ${
+                  className={`py-2 px-3 rounded-[8px] border font-medium text-center transition active:scale-[0.98] text-[12px] ${
                     (activeCard.texture || 'none') === tex.id
-                      ? 'border-indigo-500 bg-indigo-950/40 text-indigo-300'
-                      : 'border-[#262B33] text-slate-400 hover:text-white bg-[#161B22]'
+                      ? 'border-[#0A84FF] bg-[#0A84FF]/15 text-[#0A84FF]'
+                      : 'border-[#38383A] text-[#8E8E93] hover:text-[#F5F5F7] bg-[#2C2C2E]'
                   }`}
                 >
                   {tex.name}
@@ -128,7 +129,7 @@ export default function CardStudioTab({
 
           {/* 3. Card Network */}
           <div>
-            <label className="block font-bold text-slate-300 font-mono text-[11px] uppercase tracking-wider mb-2.5">
+            <label className="block font-medium text-[#8E8E93] text-[11px] uppercase tracking-wider mb-2.5">
               3. Payment Network
             </label>
             <div className="grid grid-cols-3 gap-2.5">
@@ -136,10 +137,10 @@ export default function CardStudioTab({
                 <button
                   key={b}
                   onClick={() => onUpdateActiveCard({ brand: b })}
-                  className={`py-2.5 rounded-xl border font-bold transition text-center ${
+                  className={`py-2 rounded-[8px] border font-medium transition text-center active:scale-[0.98] text-[13px] ${
                     activeCard.brand === b
-                      ? 'border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'border-[#262B33] text-slate-300 hover:text-white bg-[#161B22]'
+                      ? 'border-[#0A84FF] bg-[#0A84FF] text-white shadow-sm'
+                      : 'border-[#38383A] text-[#8E8E93] hover:text-[#F5F5F7] bg-[#2C2C2E]'
                   }`}
                 >
                   {b}
@@ -149,99 +150,99 @@ export default function CardStudioTab({
           </div>
 
           {/* 4. Edit Card & Holder Details */}
-          <div className="pt-5 border-t border-[#262B33] space-y-4">
-            <label className="block font-bold text-slate-300 font-mono text-[11px] uppercase tracking-wider">
+          <div className="pt-5 border-t border-[#38383A] space-y-4">
+            <label className="block font-medium text-[#8E8E93] text-[11px] uppercase tracking-wider">
               4. Card Identity &amp; Holder Details
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Card Alias / Label</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Card Alias / Label</label>
                 <input
                   type="text"
                   value={activeCard.label}
                   onChange={(e) => onUpdateActiveCard({ label: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Holder Printed Name</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Holder Printed Name</label>
                 <input
                   type="text"
                   value={activeCard.cardHolderName}
                   onChange={(e) => onUpdateActiveCard({ cardHolderName: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white uppercase focus:outline-none focus:border-indigo-500 font-mono"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] uppercase focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] font-mono text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">First Name</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">First Name</label>
                 <input
                   type="text"
                   value={activeCard.firstName}
                   onChange={(e) => onUpdateActiveCard({ firstName: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Last Name</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Last Name</label>
                 <input
                   type="text"
                   value={activeCard.lastName}
                   onChange={(e) => onUpdateActiveCard({ lastName: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-slate-400 font-medium mb-1">Billing Street Address</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Billing Street Address</label>
                 <input
                   type="text"
                   value={activeCard.currentAddress}
                   onChange={(e) => onUpdateActiveCard({ currentAddress: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">City, State &amp; Country</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">City, State &amp; Country</label>
                 <input
                   type="text"
                   value={activeCard.cityState}
                   onChange={(e) => onUpdateActiveCard({ cityState: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Postal / Zip Code</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Postal / Zip Code</label>
                 <input
                   type="text"
                   value={activeCard.zipCode}
                   onChange={(e) => onUpdateActiveCard({ zipCode: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500 font-mono"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] font-mono text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Primary Phone</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Primary Phone</label>
                 <input
                   type="text"
                   value={activeCard.phoneNumber}
                   onChange={(e) => onUpdateActiveCard({ phoneNumber: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Secondary Phone</label>
+                <label className="block text-[#8E8E93] font-medium text-[12px] mb-1">Secondary Phone</label>
                 <input
                   type="text"
                   value={activeCard.secondaryPhone}
                   onChange={(e) => onUpdateActiveCard({ secondaryPhone: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#161B22] border border-[#262B33] rounded-xl font-medium text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] text-[13px]"
                 />
               </div>
             </div>
