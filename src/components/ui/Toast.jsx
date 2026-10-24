@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from 'lucide-react';
 
 const TOAST_THEMES = {
@@ -32,61 +32,71 @@ const TOAST_THEMES = {
   },
 };
 
-export default function Toast({ message, type = 'success', onClose, duration = 3500 }) {
-  const [progress, setProgress] = useState(100);
-  const [prevMessage, setPrevMessage] = useState(message);
+export default function Toast({ id, message, type = 'success', onClose, duration = 3500 }) {
   const [isExiting, setIsExiting] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+  const prevIdRef = useRef(id);
+  const prevMessageRef = useRef(message);
 
-  if (message !== prevMessage) {
-    setPrevMessage(message);
-    setProgress(100);
-    setIsExiting(false);
-  }
-
-  const triggerClose = useCallback(() => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onClose?.();
-      setIsExiting(false);
-    }, 220);
-  }, [onClose]);
-
+  // If a new notification message or id arrives while mounted, cleanly reset state & animation
   useEffect(() => {
-    if (!message) return;
+    if (message && (id !== prevIdRef.current || message !== prevMessageRef.current)) {
+      prevIdRef.current = id;
+      prevMessageRef.current = message;
+      setIsExiting(false);
+      setAnimKey((k) => k + 1);
+    }
+  }, [id, message]);
 
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
-      setProgress(remaining);
-
-      if (remaining <= 0) {
-        clearInterval(interval);
-        triggerClose();
-      }
-    }, 25);
-
-    return () => clearInterval(interval);
-  }, [message, duration, triggerClose]);
+  // Safety fallback: guarantees dismiss if browser/tab throttling disrupts onAnimationEnd
+  useEffect(() => {
+    if (!isExiting) return;
+    const fallbackTimer = setTimeout(() => {
+      onClose?.();
+    }, 380);
+    return () => clearTimeout(fallbackTimer);
+  }, [isExiting, onClose]);
 
   if (!message && !isExiting) return null;
+
+  const handleProgressComplete = () => {
+    if (isExiting) return;
+    // Graceful 60ms pause after countdown line reaches 0% so completion is crisp and fully perceived
+    setTimeout(() => {
+      setIsExiting(true);
+    }, 60);
+  };
+
+  const handleDismiss = () => {
+    if (isExiting) return;
+    setIsExiting(true);
+  };
+
+  const handleCardAnimationEnd = (e) => {
+    // Only respond to animations ending on the card itself, not child elements
+    if (e.target !== e.currentTarget) return;
+    if (isExiting) {
+      onClose?.();
+    }
+  };
 
   const config = TOAST_THEMES[type] || TOAST_THEMES.success;
   const IconComponent = config.icon;
 
   return (
-    <div className="fixed top-5 right-5 z-50 max-w-sm w-full px-4 sm:px-0 pointer-events-none select-none transition-all duration-300">
+    <div className="fixed top-3 inset-x-0 mx-auto w-[calc(100%-1.25rem)] max-w-md sm:w-full sm:max-w-sm sm:right-5 sm:left-auto sm:top-5 z-50 pointer-events-none select-none">
       <div
-        className={`pointer-events-auto relative overflow-hidden bg-[#1C1C1E]/95 backdrop-blur-2xl rounded-[12px] p-3.5 border border-[#38383A] shadow-[0_12px_36px_rgba(0,0,0,0.6)] flex flex-col gap-2.5 ${
+        className={`toast-card pointer-events-auto relative overflow-hidden bg-[#1C1C1E]/95 backdrop-blur-2xl rounded-[12px] p-3.5 border border-[#38383A] shadow-[0_12px_36px_rgba(0,0,0,0.6),0_2px_8px_rgba(0,0,0,0.4)] flex flex-col gap-2.5 transition-[border-color,box-shadow] duration-200 hover:border-[#48484A] ${
           isExiting ? 'animate-toast-out' : 'animate-toast-in'
         }`}
+        onAnimationEnd={handleCardAnimationEnd}
         role="alert"
       >
         {/* Content Row */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5 min-w-0">
             {/* macOS glyph */}
-            <div className={`w-6 h-6 rounded-[6px] bg-[#2C2C2E] flex items-center justify-center shrink-0 border border-[#38383A] ${config.iconColor} mt-0.5`}>
+            <div className={`w-6 h-6 rounded-[6px] bg-[#2C2C2E] flex items-center justify-center shrink-0 border border-[#38383A] ${config.iconColor} mt-0.5 shadow-xs`}>
               <IconComponent className="w-3.5 h-3.5" />
             </div>
 
@@ -107,8 +117,8 @@ export default function Toast({ message, type = 'success', onClose, duration = 3
           {/* Dismiss Button */}
           {onClose && (
             <button
-              onClick={triggerClose}
-              className="text-[#8E8E93] hover:text-white p-1 rounded-[6px] hover:bg-[#2C2C2E] transition active:scale-[0.98] shrink-0"
+              onClick={handleDismiss}
+              className="text-[#8E8E93] hover:text-white p-1 rounded-[6px] hover:bg-[#2C2C2E] transition active:scale-[0.94] shrink-0"
               aria-label="Dismiss alert"
             >
               <X className="w-3.5 h-3.5" />
@@ -116,13 +126,18 @@ export default function Toast({ message, type = 'success', onClose, duration = 3
           )}
         </div>
 
-        {/* Hairline countdown bar */}
-        <div className="w-full bg-[#2C2C2E] h-[1.5px] rounded-full overflow-hidden">
+        {/* Hairline countdown bar (hardware-accelerated GPU scaleX, pauses on hover) */}
+        <div className="w-full bg-[#2C2C2E]/80 h-[2px] rounded-full overflow-hidden">
           <div
-            className="h-full transition-all duration-75 ease-linear rounded-full"
+            key={animKey}
+            className="h-full w-full rounded-full toast-progress-bar"
             style={{
-              width: `${progress}%`,
               backgroundColor: config.accentColor,
+              '--toast-duration': `${duration}ms`,
+            }}
+            onAnimationEnd={(e) => {
+              e.stopPropagation();
+              handleProgressComplete();
             }}
           />
         </div>

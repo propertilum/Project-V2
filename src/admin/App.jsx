@@ -7,11 +7,10 @@ import Toast from '../components/ui/Toast';
 export default function AdminApp() {
   const [adminUser, setAdminUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState({ message: '', type: 'success' });
+  const [toast, setToast] = useState({ id: 0, message: '', type: 'success' });
 
   const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast({ message: '', type: 'success' }), 3800);
+    setToast({ id: Date.now() + Math.random(), message, type });
   };
 
   // Check for existing admin session on mount
@@ -73,7 +72,13 @@ export default function AdminApp() {
 
   return (
     <div className="min-h-screen bg-[#000000]">
-      <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+      <Toast
+        key={toast.id || 'admin-toast'}
+        id={toast.id}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+      />
       
       {adminUser ? (
         <AdminDashboard

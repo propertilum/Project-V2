@@ -25,6 +25,20 @@ main, aside, .overflow-y-auto, .overflow-x-auto {
   overscroll-behavior-x: contain;
 }
 
+/* ── Clean Mobile No-Scrollbar Utility ── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Mobile Touch Polish ── */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
 :root {
   --bg-app: #000000;
   --surface-main: #1C1C1E;
@@ -113,7 +127,61 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 @keyframes toast-slide-in-right {
   0% {
     opacity: 0;
-    transform: translate3d(120%, 0, 0);
+    transform: translate3d(105%, 0, 0) scale(0.96);
+  }
+  65% {
+    opacity: 1;
+    transform: translate3d(-2px, 0, 0) scale(1.002);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes toast-slide-out-right {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(110%, 0, 0) scale(0.95);
+  }
+}
+
+/* ── Mobile Notification Banner Spring Physics (Top Pop-Down) ── */
+@keyframes toast-pop-down {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -120%, 0) scale(0.92);
+  }
+  65% {
+    opacity: 1;
+    transform: translate3d(0, 4px, 0) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes toast-pop-up {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -120%, 0) scale(0.92);
+  }
+}
+
+/* ── Mobile Bottom Sheet & Option Menu Slide-Up Animation ── */
+@keyframes sheet-slide-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
   }
   100% {
     opacity: 1;
@@ -121,14 +189,28 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   }
 }
 
-@keyframes toast-slide-out-right {
+@keyframes sheet-slide-down {
   0% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
   100% {
     opacity: 0;
-    transform: translate3d(120%, 0, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes backdrop-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
 
@@ -155,13 +237,60 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   }
 }
 
+/* ── Subtle Section Transition Animations (Apple HIG) ── */
+@keyframes section-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.992) translate3d(0, 6px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes section-exit {
+  0% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.992) translate3d(0, -6px, 0);
+  }
+}
+
 .animate-fade-in-up     { animation: apple-fade-up 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-fade-in        { animation: apple-fade 0.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-scale-in       { animation: apple-scale 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-toast-in       { animation: toast-slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-toast-out      { animation: toast-slide-out-right 0.50s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Responsive Toast Animations: Dynamic Island drop-down on mobile, slide from right on desktop */
+.animate-toast-in       { animation: toast-pop-down 0.38s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
+.animate-toast-out      { animation: toast-pop-up 0.32s cubic-bezier(0.25, 1, 0.5, 1) both; will-change: transform, opacity; }
+
+@media (min-width: 640px) {
+  .animate-toast-in     { animation: toast-slide-in-right 0.38s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-toast-out    { animation: toast-slide-out-right 0.32s cubic-bezier(0.25, 1, 0.5, 1) both; }
+}
+
+/* Bottom Sheet & Action Menu Animations */
+.animate-sheet-up       { animation: sheet-slide-up 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
+.animate-backdrop-in    { animation: backdrop-fade-in 0.24s ease-out both; }
+
+/* ── Hardware-accelerated Progress Bar & Hover Pause ── */
+.toast-progress-bar {
+  transform-origin: left center;
+  animation: toast-progress var(--toast-duration, 3500ms) linear forwards;
+  will-change: transform;
+}
+
+.toast-card:not(.animate-toast-out):hover .toast-progress-bar {
+  animation-play-state: paused;
+}
 .animate-screen-enter   { animation: apple-screen-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .animate-screen-exit    { animation: apple-screen-exit 0.22s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-section-enter  { animation: section-enter 0.26s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
+.animate-section-exit   { animation: section-exit 0.14s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: transform, opacity; }
 
 /* ── Glass morphism utility ── */
 .glass {

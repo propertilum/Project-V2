@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Data & Constants
 import { INITIAL_USERS } from '../data/initialUsers';
@@ -31,6 +31,12 @@ import VerifyEmailModal from './auth/VerifyEmailModal';
 // Navigation
 import Sidebar from './navigation/Sidebar';
 import Header from './navigation/Header';
+
+// Mobile-Dedicated Experience
+import MobileHeader from './mobile/MobileHeader';
+import MobileBottomNav from './mobile/MobileBottomNav';
+import MobileCardDeck from './mobile/MobileCardDeck';
+import MobileVaultMenu from './mobile/MobileVaultMenu';
 
 // Tabs
 import OverviewTab from './tabs/OverviewTab';
@@ -146,7 +152,17 @@ export default function Cardhub() {
     return 'login';
   });
   const [activeTab, setActiveTab] = useState('overview');
+  const [isSectionTransitioning, setIsSectionTransitioning] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleTabChange = useCallback((nextTab) => {
+    if (nextTab === activeTab) return;
+    setIsSectionTransitioning(true);
+    setTimeout(() => {
+      setActiveTab(nextTab);
+      setIsSectionTransitioning(false);
+    }, 140);
+  }, [activeTab]);
 
   // ── Per-User Persistent State (keyed by UID, loaded on page-refresh) ────────
   const _initUid = getInitialUid();
@@ -188,7 +204,7 @@ export default function Cardhub() {
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
 
   // ── Toast Feedback ──────────────────────────────────────────────────────────
-  const [toast, setToast] = useState({ message: '', type: 'success' });
+  const [toast, setToast] = useState({ id: 0, message: '', type: 'success' });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [isPageTransitioning, setIsPageTransitioning] = useState(false);
 
@@ -207,10 +223,9 @@ export default function Cardhub() {
     }, 180);
   };
 
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast({ message: '', type: 'success' }), 3800);
-  };
+  const showToast = useCallback((message, type = 'success') => {
+    setToast({ id: Date.now() + Math.random(), message, type });
+  }, []);
 
   // ── LocalStorage Sync — ALL writes use UID-namespaced keys ──────────────────
   useEffect(() => {
@@ -850,7 +865,13 @@ export default function Cardhub() {
   if (currentStep === 'signup') {
     return (
       <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+        <Toast
+          key={toast.id || 'toast-signup'}
+          id={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+        />
         <SignupPage
           onSignupSuccess={handleSignupSuccess}
           onGoToLogin={() => handleStepTransition('login')}
@@ -867,7 +888,13 @@ export default function Cardhub() {
   if (currentStep === 'login') {
     return (
       <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+        <Toast
+          key={toast.id || 'toast-login'}
+          id={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+        />
         <LoginPage
           onLoginSuccess={handleLoginSuccess}
           onGoToSignup={() => handleStepTransition('signup')}
@@ -885,7 +912,13 @@ export default function Cardhub() {
   if (currentStep === 'first-time-setup') {
     return (
       <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+        <Toast
+          key={toast.id || 'toast-setup'}
+          id={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+        />
         <FirstTimeCardSetup
           user={currentUser}
           onCompleteSetup={handleFirstTimeSetupComplete}
@@ -899,7 +932,13 @@ export default function Cardhub() {
   if (currentStep === 'admin') {
     return (
       <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+        <Toast
+          key={toast.id || 'toast-admin'}
+          id={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+        />
         <AdminDashboard
           users={users}
           cards={cards}
@@ -916,9 +955,15 @@ export default function Cardhub() {
 
   // ── Main Dashboard ──────────────────────────────────────────────────────────
   return (
-    <div className={`h-screen w-full overflow-hidden bg-[#000000] text-[#F5F5F7] flex flex-col md:flex-row font-sans antialiased selection:bg-[#0A84FF] selection:text-white ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
+    <div className={`min-h-[100dvh] md:h-screen w-full md:overflow-hidden bg-[#000000] text-[#F5F5F7] font-sans antialiased selection:bg-[#0A84FF] selection:text-white ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
       {/* Toast Alert Feed */}
-      <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+      <Toast
+        key={toast.id || 'toast-main'}
+        id={toast.id}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ id: 0, message: '', type: 'success' })}
+      />
 
       {/* Global Modals & Drawers */}
       <TopUpModal
@@ -974,203 +1019,432 @@ export default function Cardhub() {
         showToast={showToast}
       />
 
-      {/* Primary Sidebar Navigation */}
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        cardCount={cards.length}
-        openAlertsCount={getUnresolvedAlertsCount(alerts)}
-        onLogout={handleLogout}
-        isOpenMobile={isMobileMenuOpen}
-        setIsOpenMobile={setIsMobileMenuOpen}
-        currentUser={currentUser}
-        onGoToAdmin={handleGoToAdmin}
-        onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
-      />
-
-      {/* Main Command Workspace */}
-      <main className="flex-1 h-screen overflow-y-auto p-5 sm:p-8 lg:p-10 w-full max-w-7xl mx-auto flex flex-col">
-        {/* Top Header */}
-        <Header
-          activeTab={activeTab}
-          currentUser={currentUser}
-          walletBalance={walletBalance}
-          openAlertsCount={getUnresolvedAlertsCount(alerts)}
-          onOpenTopUp={() => setIsTopUpOpen(true)}
-          onOpenChat={() => setIsChatOpen(true)}
-          onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          onPanicFreezeAll={handlePanicFreezeAll}
-          allCardsFrozen={allCardsFrozen}
-          onGoToAdmin={handleGoToAdmin}
-          onNavigateTab={(tab) => setActiveTab(tab)}
-        />
-
-        {/* Security Email Verification Notice Banner */}
-        <EmailVerificationBanner
-          currentUser={currentUser}
-          onEmailVerified={handleEmailVerified}
-          showToast={showToast}
-        />
-
-        {/* Tab 1: Command Center Overview */}
-        {activeTab === 'overview' && (
-          <OverviewTab
-            cards={cards}
-            activeCardId={activeCardId}
-            setActiveCardId={setActiveCardId}
+      {/* ── Mobile Layout (< md) ── */}
+      <div className="md:hidden fixed inset-0 h-[100dvh] max-h-[100dvh] w-full flex flex-col overflow-hidden bg-[#000000] z-0">
+        {/* Sticky Mobile Header (Permanently pinned at top) */}
+        <div className="shrink-0 z-30">
+          <MobileHeader
+            activeTab={activeTab}
             walletBalance={walletBalance}
-            transactions={transactions}
-            subscriptions={subscriptions}
-            alerts={alerts}
-            onOpenNewCard={() => setIsNewCardModalOpen(true)}
-            onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+            openAlertsCount={getUnresolvedAlertsCount(alerts)}
             onOpenTopUp={() => setIsTopUpOpen(true)}
-            onUpdateCard={handleUpdateCard}
-            onSelectTransaction={(tx) => setInspectedTransaction(tx)}
-            onNavigateTab={(tab) => setActiveTab(tab)}
-            onCopy={handleCopy}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 2: My Cards (Full Inventory: Bank + Virtual + Demo) */}
-        {activeTab === 'my-cards' && (
-          <MyCardsTab
-            cards={cards}
-            onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
-            onUpdateCard={handleUpdateCard}
-            onNavigateTab={(tab) => setActiveTab(tab)}
-            showToast={showToast}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 3: Virtual Cards (Dedicated Exposure Protection & Burners) */}
-        {(activeTab === 'virtual-cards' || activeTab === 'cards') && (
-          <VirtualCardsTab
-            cards={cards}
-            onOpenNewCard={() => setIsNewCardModalOpen(true)}
-            onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
-            onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
-            onUpdateCard={handleUpdateCard}
-            showToast={showToast}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 4: Transaction & Activity Ledger */}
-        {activeTab === 'transactions' && (
-          <TransactionsTab
-            transactions={transactions}
-            cards={cards}
-            onSelectTransaction={(tx) => setInspectedTransaction(tx)}
-            initialFilter={transactionFilter}
-            onFilterCleared={() => setTransactionFilter('')}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 5: Security & Risk Alerts */}
-        {activeTab === 'alerts' && (
-          <AlertsTab
-            alerts={alerts}
-            cards={cards}
-            onUpdateAlertStatus={handleUpdateAlertStatus}
-            onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
-            onNavigateTab={(tab) => setActiveTab(tab)}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 6: Spending Rules & Transaction Simulator */}
-        {activeTab === 'rules' && (
-          <RulesTab
-            rules={rules}
-            cards={cards}
-            transactions={transactions}
-            onAddRule={handleAddRule}
-            onToggleRule={handleToggleRule}
-            showToast={showToast}
-          />
-        )}
-
-        {/* Tab 7: Financial Provider Connections */}
-        {activeTab === 'connections' && (
-          <ConnectionsTab
-            connections={connections}
-            onSyncConnection={handleSyncConnection}
-            onDisconnectConnection={handleDisconnectConnection}
-            showToast={showToast}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 8: Card Studio Customizer */}
-        {activeTab === 'customizer' && (
-          <CardStudioTab
-            activeCard={activeCard}
-            onUpdateActiveCard={(fields) => activeCard && handleUpdateCard(activeCard.id, fields)}
-            onCopy={handleCopy}
-          />
-        )}
-
-        {/* Tab 9: Spending Insights */}
-        {activeTab === 'spending' && (
-          <SpendingTab
-            transactions={transactions}
-            cards={cards}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 10: Subscription Intelligence */}
-        {activeTab === 'subscriptions' && (
-          <SubscriptionsTab
-            subscriptions={subscriptions}
-            cards={cards}
-            onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
-            onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
-            onFilterMerchantHistory={handleFilterMerchantHistory}
-            isLoading={!isDataLoaded}
-          />
-        )}
-
-        {/* Tab 11: Security Console */}
-        {activeTab === 'security' && (
-          <SecurityTab
-            cards={cards}
-            sessions={sessions}
-            settings={settings}
-            currentUser={currentUser}
-            onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
-            onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
             onPanicFreezeAll={handlePanicFreezeAll}
             allCardsFrozen={allCardsFrozen}
-            onRevokeSession={handleRevokeSession}
-            onUnfreezeCard={(cId) => handleUpdateCard(cId, { isLocked: false })}
-            isLoading={!isDataLoaded}
+            onNavigateTab={handleTabChange}
           />
-        )}
 
-        {/* Tab 12: Activity Timeline */}
-        {activeTab === 'activity' && (
-          <ActivityTab activityLogs={activityLogs} isLoading={!isDataLoaded} />
-        )}
-
-        {/* Tab 13: Account & Platform Settings */}
-        {activeTab === 'settings' && (
-          <SettingsTab
-            user={activeCard}
+          <EmailVerificationBanner
             currentUser={currentUser}
-            onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
-            settings={settings}
-            onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
-            onResetData={handleResetData}
-            onExportAllData={handleExportAllData}
-            isLoading={!isDataLoaded}
+            onEmailVerified={handleEmailVerified}
+            showToast={showToast}
           />
-        )}
-      </main>
+        </div>
+
+        {/* Scrollable Viewport (THE ONLY ELEMENT THAT SCROLLS ON PHONE) */}
+        <div className="flex-1 overflow-y-auto overscroll-contain pb-24">
+          <div
+            key={activeTab}
+            className={`w-full ${isSectionTransitioning ? 'animate-section-exit' : 'animate-section-enter'}`}
+          >
+            {/* Main Card-First Hero if on overview or cards */}
+            {(activeTab === 'overview' || activeTab === 'my-cards' || activeTab === 'virtual-cards') && (
+              <MobileCardDeck
+                cards={cards}
+                activeCardId={activeCardId}
+                setActiveCardId={setActiveCardId}
+                walletBalance={walletBalance}
+                transactions={transactions}
+                onOpenNewCard={() => setIsNewCardModalOpen(true)}
+                onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+                onOpenTopUp={() => setIsTopUpOpen(true)}
+                onUpdateCard={handleUpdateCard}
+                onSelectTransaction={(tx) => setInspectedTransaction(tx)}
+                onNavigateTab={handleTabChange}
+                onCopy={handleCopy}
+                onOpenCardDetails={(card) => setCardForDetailsDrawer(card)}
+              />
+            )}
+
+            {activeTab === 'vault-menu' && (
+              <MobileVaultMenu
+                onNavigateTab={handleTabChange}
+                openAlertsCount={getUnresolvedAlertsCount(alerts)}
+                currentUser={currentUser}
+                onGoToAdmin={handleGoToAdmin}
+                onLogout={handleLogout}
+              />
+            )}
+
+            {activeTab === 'transactions' && (
+              <div className="p-4">
+                <TransactionsTab
+                  transactions={transactions}
+                  cards={cards}
+                  onSelectTransaction={(tx) => setInspectedTransaction(tx)}
+                  initialFilter={transactionFilter}
+                  onFilterCleared={() => setTransactionFilter('')}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+
+            {/* Shield Hub: Segmented Rules & Alerts Switcher */}
+            {(activeTab === 'rules' || activeTab === 'alerts') && (
+              <div className="p-4 space-y-4">
+                <div className="flex rounded-[10px] bg-[#1C1C1E] border border-[#38383A] p-1 shadow-xs">
+                  <button
+                    onClick={() => handleTabChange('rules')}
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] ${
+                      activeTab === 'rules'
+                        ? 'bg-[#0A84FF] text-white shadow-xs'
+                        : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+                    }`}
+                  >
+                    Rules & Limits
+                  </button>
+                  <button
+                    onClick={() => handleTabChange('alerts')}
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] flex items-center justify-center gap-1.5 ${
+                      activeTab === 'alerts'
+                        ? 'bg-[#FF453A] text-white shadow-xs'
+                        : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+                    }`}
+                  >
+                    <span>Security Alerts</span>
+                    {getUnresolvedAlertsCount(alerts) > 0 && (
+                      <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold ${
+                        activeTab === 'alerts' ? 'bg-white text-[#FF453A]' : 'bg-[#FF453A] text-white'
+                      }`}>
+                        {getUnresolvedAlertsCount(alerts)}
+                      </span>
+                    )}
+                  </button>
+                </div>
+
+                {activeTab === 'rules' ? (
+                  <RulesTab
+                    rules={rules}
+                    cards={cards}
+                    transactions={transactions}
+                    onAddRule={handleAddRule}
+                    onToggleRule={handleToggleRule}
+                    showToast={showToast}
+                  />
+                ) : (
+                  <AlertsTab
+                    alerts={alerts}
+                    cards={cards}
+                    onUpdateAlertStatus={handleUpdateAlertStatus}
+                    onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
+                    onNavigateTab={handleTabChange}
+                    isLoading={!isDataLoaded}
+                  />
+                )}
+              </div>
+            )}
+
+            {activeTab === 'connections' && (
+              <div className="p-4">
+                <ConnectionsTab
+                  connections={connections}
+                  onSyncConnection={handleSyncConnection}
+                  onDisconnectConnection={handleDisconnectConnection}
+                  showToast={showToast}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+
+            {activeTab === 'customizer' && (
+              <div className="p-4">
+                <CardStudioTab
+                  activeCard={activeCard}
+                  onUpdateActiveCard={(fields) => activeCard && handleUpdateCard(activeCard.id, fields)}
+                  onCopy={handleCopy}
+                />
+              </div>
+            )}
+
+            {activeTab === 'spending' && (
+              <div className="p-4">
+                <SpendingTab
+                  transactions={transactions}
+                  cards={cards}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+
+            {activeTab === 'subscriptions' && (
+              <div className="p-4">
+                <SubscriptionsTab
+                  subscriptions={subscriptions}
+                  cards={cards}
+                  onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
+                  onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+                  onFilterMerchantHistory={handleFilterMerchantHistory}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+
+            {activeTab === 'security' && (
+              <div className="p-4">
+                <SecurityTab
+                  cards={cards}
+                  sessions={sessions}
+                  settings={settings}
+                  currentUser={currentUser}
+                  onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
+                  onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
+                  onPanicFreezeAll={handlePanicFreezeAll}
+                  allCardsFrozen={allCardsFrozen}
+                  onRevokeSession={handleRevokeSession}
+                  onUnfreezeCard={(cId) => handleUpdateCard(cId, { isLocked: false })}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+
+            {activeTab === 'activity' && (
+              <div className="p-4">
+                <ActivityTab activityLogs={activityLogs} isLoading={!isDataLoaded} />
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="p-4">
+                <SettingsTab
+                  user={activeCard}
+                  currentUser={currentUser}
+                  onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
+                  settings={settings}
+                  onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
+                  onResetData={handleResetData}
+                  onExportAllData={handleExportAllData}
+                  isLoading={!isDataLoaded}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Fixed Mobile Bottom Navigation (Permanently locked to bottom) */}
+        <div className="shrink-0 z-40">
+          <MobileBottomNav
+            activeTab={activeTab}
+            onNavigateTab={handleTabChange}
+            openAlertsCount={getUnresolvedAlertsCount(alerts)}
+          />
+        </div>
+      </div>
+
+      {/* ── Desktop Layout (md and up) ── */}
+      <div className="hidden md:flex flex-row h-screen w-full overflow-hidden">
+        {/* Primary Sidebar Navigation */}
+        <Sidebar
+          activeTab={activeTab === 'vault-menu' ? 'overview' : activeTab}
+          setActiveTab={handleTabChange}
+          cardCount={cards.length}
+          openAlertsCount={getUnresolvedAlertsCount(alerts)}
+          onLogout={handleLogout}
+          isOpenMobile={isMobileMenuOpen}
+          setIsOpenMobile={setIsMobileMenuOpen}
+          currentUser={currentUser}
+          onGoToAdmin={handleGoToAdmin}
+          onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
+        />
+
+        {/* Main Command Workspace */}
+        <main className="flex-1 h-screen overflow-y-auto p-5 sm:p-8 lg:p-10 w-full max-w-7xl mx-auto flex flex-col">
+          {/* Top Header */}
+          <Header
+            activeTab={activeTab === 'vault-menu' ? 'overview' : activeTab}
+            currentUser={currentUser}
+            walletBalance={walletBalance}
+            openAlertsCount={getUnresolvedAlertsCount(alerts)}
+            onOpenTopUp={() => setIsTopUpOpen(true)}
+            onOpenChat={() => setIsChatOpen(true)}
+            onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onPanicFreezeAll={handlePanicFreezeAll}
+            allCardsFrozen={allCardsFrozen}
+            onGoToAdmin={handleGoToAdmin}
+            onNavigateTab={handleTabChange}
+          />
+
+          {/* Security Email Verification Notice Banner */}
+          <EmailVerificationBanner
+            currentUser={currentUser}
+            onEmailVerified={handleEmailVerified}
+            showToast={showToast}
+          />
+
+          {/* Section Container with subtle enter/exit animations */}
+          <div
+            key={activeTab}
+            className={`w-full flex-1 flex flex-col ${isSectionTransitioning ? 'animate-section-exit' : 'animate-section-enter'}`}
+          >
+            {/* Tab 1: Command Center Overview */}
+            {(activeTab === 'overview' || activeTab === 'vault-menu') && (
+              <OverviewTab
+                cards={cards}
+                activeCardId={activeCardId}
+                setActiveCardId={setActiveCardId}
+                walletBalance={walletBalance}
+                transactions={transactions}
+                subscriptions={subscriptions}
+                alerts={alerts}
+                onOpenNewCard={() => setIsNewCardModalOpen(true)}
+                onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+                onOpenTopUp={() => setIsTopUpOpen(true)}
+                onUpdateCard={handleUpdateCard}
+                onSelectTransaction={(tx) => setInspectedTransaction(tx)}
+                onNavigateTab={handleTabChange}
+                onCopy={handleCopy}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 2: My Cards (Full Inventory: Bank + Virtual + Demo) */}
+            {activeTab === 'my-cards' && (
+              <MyCardsTab
+                cards={cards}
+                onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
+                onUpdateCard={handleUpdateCard}
+                onNavigateTab={handleTabChange}
+                showToast={showToast}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 3: Virtual Cards (Dedicated Exposure Protection & Burners) */}
+            {(activeTab === 'virtual-cards' || activeTab === 'cards') && (
+              <VirtualCardsTab
+                cards={cards}
+                onOpenNewCard={() => setIsNewCardModalOpen(true)}
+                onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+                onSelectCardDetails={(card) => setCardForDetailsDrawer(card)}
+                onUpdateCard={handleUpdateCard}
+                showToast={showToast}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 4: Transaction & Activity Ledger */}
+            {activeTab === 'transactions' && (
+              <TransactionsTab
+                transactions={transactions}
+                cards={cards}
+                onSelectTransaction={(tx) => setInspectedTransaction(tx)}
+                initialFilter={transactionFilter}
+                onFilterCleared={() => setTransactionFilter('')}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 5: Security & Risk Alerts */}
+            {activeTab === 'alerts' && (
+              <AlertsTab
+                alerts={alerts}
+                cards={cards}
+                onUpdateAlertStatus={handleUpdateAlertStatus}
+                onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
+                onNavigateTab={handleTabChange}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 6: Spending Rules & Transaction Simulator */}
+            {activeTab === 'rules' && (
+              <RulesTab
+                rules={rules}
+                cards={cards}
+                transactions={transactions}
+                onAddRule={handleAddRule}
+                onToggleRule={handleToggleRule}
+                showToast={showToast}
+              />
+            )}
+
+            {/* Tab 7: Financial Provider Connections */}
+            {activeTab === 'connections' && (
+              <ConnectionsTab
+                connections={connections}
+                onSyncConnection={handleSyncConnection}
+                onDisconnectConnection={handleDisconnectConnection}
+                showToast={showToast}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 8: Card Studio Customizer */}
+            {activeTab === 'customizer' && (
+              <CardStudioTab
+                activeCard={activeCard}
+                onUpdateActiveCard={(fields) => activeCard && handleUpdateCard(activeCard.id, fields)}
+                onCopy={handleCopy}
+              />
+            )}
+
+            {/* Tab 9: Spending Insights */}
+            {activeTab === 'spending' && (
+              <SpendingTab
+                transactions={transactions}
+                cards={cards}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 10: Subscription Intelligence */}
+            {activeTab === 'subscriptions' && (
+              <SubscriptionsTab
+                subscriptions={subscriptions}
+                cards={cards}
+                onFreezeCard={(cId) => handleUpdateCard(cId, { isLocked: true })}
+                onOpenBurnerCard={() => setIsBurnerModalOpen(true)}
+                onFilterMerchantHistory={handleFilterMerchantHistory}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 11: Security Console */}
+            {activeTab === 'security' && (
+              <SecurityTab
+                cards={cards}
+                sessions={sessions}
+                settings={settings}
+                currentUser={currentUser}
+                onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
+                onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
+                onPanicFreezeAll={handlePanicFreezeAll}
+                allCardsFrozen={allCardsFrozen}
+                onRevokeSession={handleRevokeSession}
+                onUnfreezeCard={(cId) => handleUpdateCard(cId, { isLocked: false })}
+                isLoading={!isDataLoaded}
+              />
+            )}
+
+            {/* Tab 12: Activity Timeline */}
+            {activeTab === 'activity' && (
+              <ActivityTab activityLogs={activityLogs} isLoading={!isDataLoaded} />
+            )}
+
+            {/* Tab 13: Account & Platform Settings */}
+            {activeTab === 'settings' && (
+              <SettingsTab
+                user={activeCard}
+                currentUser={currentUser}
+                onOpenVerifyEmail={() => setIsVerifyModalOpen(true)}
+                settings={settings}
+                onUpdateSettings={(newFields) => setSettings((prev) => ({ ...prev, ...newFields }))}
+                onResetData={handleResetData}
+                onExportAllData={handleExportAllData}
+                isLoading={!isDataLoaded}
+              />
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
