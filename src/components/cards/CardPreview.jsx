@@ -64,7 +64,7 @@ export default function CardPreview({
 
   return (
     <div
-      className={`relative w-full aspect-[1.586/1] bg-[#111418] text-[#F5F5F7] rounded-[14px] p-5 sm:p-6 shadow-md border border-white/[0.08] hover:border-white/[0.16] flex flex-col justify-between overflow-hidden transition-all duration-150 select-none group ${
+      className={`relative w-full aspect-[1.586/1] bg-[#111418] text-[#F5F5F7] rounded-[14px] p-3.5 sm:p-6 shadow-md border border-white/[0.08] hover:border-white/[0.16] flex flex-col justify-between overflow-hidden transition-all duration-150 select-none group ${
         card.isLocked ? 'opacity-90' : ''
       } ${className}`}
     >
@@ -168,7 +168,7 @@ export default function CardPreview({
           </div>
 
           {/* Masked / Revealed Card Number — full row, no competing sibling */}
-          <div className="font-mono text-base sm:text-xl font-bold tracking-[0.16em] text-[#F5F5F7] select-all tabular-nums drop-shadow-sm overflow-hidden">
+          <div className="font-mono text-[13px] sm:text-xl font-bold tracking-[0.08em] sm:tracking-[0.16em] text-[#F5F5F7] select-all tabular-nums drop-shadow-sm overflow-hidden whitespace-nowrap">
             {formatDisplayNumber()}
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function CardPreview({
         {/* High-Precision Enforcement Stamp */}
         <div className="shrink-0 flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] bg-black/60 border border-white/[0.08] text-[9px] font-mono tracking-[0.14em] uppercase text-[#8E8E93]">
           <ShieldCheck className="w-3 h-3 text-[#0A84FF]" />
-          <span>
+          <span className="hidden min-[360px]:inline">
             {isBankCard
               ? 'CARDHUB // MONITORED'
               : isDemo

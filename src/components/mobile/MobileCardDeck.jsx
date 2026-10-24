@@ -119,7 +119,7 @@ export default function MobileCardDeck({
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="w-full flex gap-3.5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-5 scroll-smooth"
+          className="w-full flex gap-3.5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-3.5 sm:px-5 scroll-smooth"
         >
           {cards.map((card, idx) => {
             const isSelected = card.id === activeCard.id;
@@ -183,8 +183,8 @@ export default function MobileCardDeck({
       </div>
 
       {/* ── 2. Dedicated Thumb-Zone Quick Action Dock ── */}
-      <div className="px-5">
-        <div className="grid grid-cols-4 gap-2.5">
+      <div className="px-3.5 sm:px-5">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
           {/* Freeze / Unfreeze */}
           <button
             onClick={handleToggleFreeze}
@@ -242,8 +242,8 @@ export default function MobileCardDeck({
       </div>
 
       {/* ── 3. Active Card Exposure & Limit Widget ── */}
-      <div className="px-5">
-        <div className="p-4 rounded-[14px] bg-[#1C1C1E] border border-[#38383A] shadow-xs flex flex-col gap-2.5">
+      <div className="px-3.5 sm:px-5">
+        <div className="p-3.5 sm:p-4 rounded-[14px] bg-[#1C1C1E] border border-[#38383A] shadow-xs flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-[#F5F5F7]">{activeCard.label}</span>
@@ -299,7 +299,7 @@ export default function MobileCardDeck({
       </div>
 
       {/* ── 4. Card-Specific Recent Activity ── */}
-      <div className="px-5">
+      <div className="px-3.5 sm:px-5">
         <div className="flex items-center justify-between mb-2.5">
           <h3 className="text-xs font-semibold text-[#8E8E93] uppercase font-mono tracking-wider">
             Card Activity

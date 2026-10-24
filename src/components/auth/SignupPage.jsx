@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   CreditCard, Shield, Lock, Eye, EyeOff, User, Mail, Phone,
-  MapPin, AlertCircle, ArrowRight, CheckCircle2, Zap
+  MapPin, AlertCircle, ArrowRight, CheckCircle2, Zap, ArrowLeft
 } from 'lucide-react';
 import { signUpWithEmail, getAuthErrorMessage, sendUserEmailVerification } from '../../lib/authService';
 import { createUserProfile } from '../../lib/firestoreService';
@@ -131,37 +131,37 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col justify-center items-center p-4 font-sans text-[#F5F5F7] relative">
-      <div className="w-full max-w-4xl relative my-6">
+    <div className="min-h-[100dvh] w-full bg-[#000000] flex flex-col justify-center items-center p-3 sm:p-4 py-6 sm:py-8 font-sans text-[#F5F5F7] relative overflow-y-auto">
+      <div className="w-full max-w-lg md:max-w-4xl mx-auto my-auto relative my-4 sm:my-6">
         <div className="bg-[#1C1C1E] rounded-[16px] overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-[#38383A]">
 
-          {/* ── Left brand panel ── */}
-          <div className="md:col-span-5 bg-[#161618] text-white p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#38383A]">
+          {/* ── Left brand panel (Desktop only) ── */}
+          <div className="hidden md:flex md:col-span-5 bg-[#161618] text-white p-5 sm:p-6 md:p-8 flex-col justify-between border-b md:border-b-0 md:border-r border-[#38383A]">
             <div>
               {/* Logo */}
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="w-10 h-10 bg-[#0A84FF] rounded-[10px] flex items-center justify-center text-white">
+              <div className="flex items-center space-x-3 mb-4 md:mb-8">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#0A84FF] rounded-[10px] flex items-center justify-center text-white shrink-0">
                   <CreditCard className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[17px] font-semibold tracking-tight block leading-none text-white">CardHub</span>
+                  <span className="text-[16px] sm:text-[17px] font-semibold tracking-tight block leading-none text-white">CardHub</span>
                   <span className="text-[10px] font-medium tracking-wider uppercase text-[#8E8E93] mt-1 block">Virtual Card Platform</span>
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] text-[11px] font-medium mb-4">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] text-[11px] font-medium mb-3 md:mb-4">
                 <Zap className="w-3.5 h-3.5" />
                 <span>Create Your Account</span>
               </div>
 
-              <h1 className="text-[22px] font-bold mb-3 leading-snug tracking-tight text-white">
+              <h1 className="text-[18px] sm:text-[22px] font-bold mb-2 md:mb-3 leading-snug tracking-tight text-white">
                 Open Your Digital Card Vault
               </h1>
-              <p className="text-[#8E8E93] text-[13px] leading-relaxed">
+              <p className="text-[#8E8E93] text-[12px] sm:text-[13px] leading-relaxed">
                 Issue virtual payment cards, set per-merchant spending limits, block unwanted subscriptions, and keep your real card details private.
               </p>
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-5 md:mt-8 space-y-2.5 md:space-y-3">
                 {[
                   { icon: Shield,      label: 'Zero-liability fraud protection',   color: 'text-[#34C759]' },
                   { icon: Lock,        label: 'End-to-end encrypted storage',       color: 'text-[#0A84FF]' },
@@ -176,7 +176,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
               </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-[#38383A] text-[11px] text-[#8E8E93] flex items-center justify-between">
+            <div className="mt-6 md:mt-8 pt-4 border-t border-[#38383A] text-[11px] text-[#8E8E93] flex flex-wrap gap-2 items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-[#34C759]" />
                 PCI-DSS Level 1 Compliant
@@ -186,16 +186,28 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
           </div>
 
           {/* ── Right form panel ── */}
-          <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-center bg-[#1C1C1E]">
-            <div className="mb-5 flex items-center justify-between">
+          <div className="md:col-span-7 p-5 sm:p-6 md:p-8 flex flex-col justify-center bg-[#1C1C1E]">
+            {/* Mobile Back Button (< md only) */}
+            <div className="md:hidden mb-3">
+              <button
+                type="button"
+                onClick={() => onGoToLogin && onGoToLogin('welcome')}
+                className="inline-flex items-center gap-1.5 text-[12px] text-[#8E8E93] hover:text-white transition py-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>← Back to Welcome</span>
+              </button>
+            </div>
+
+            <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
               <div>
                 <h2 className="text-[18px] font-semibold text-white tracking-tight">Create Your Account</h2>
                 <p className="text-[12px] text-[#8E8E93] mt-0.5">Fill in your details to get started</p>
               </div>
               <button
                 type="button"
-                onClick={onGoToLogin}
-                className="text-[12px] text-[#0A84FF] hover:underline font-medium"
+                onClick={() => onGoToLogin && onGoToLogin('signin')}
+                className="text-[12px] text-[#0A84FF] hover:underline font-medium self-start sm:self-auto"
               >
                 Sign In Instead
               </button>
@@ -222,7 +234,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type="text" required placeholder="Jane Smith"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-3 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                   </div>
                 </div>
@@ -234,7 +246,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type="email" required placeholder="jane@example.com"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-3 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                   </div>
                 </div>
@@ -250,7 +262,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type="tel" placeholder="+1 (555) 000-0000"
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-3 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                   </div>
                 </div>
@@ -262,7 +274,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type="text" placeholder="New York, NY, USA"
                       value={form.cityState}
                       onChange={(e) => setForm({ ...form, cityState: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-3 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                   </div>
                 </div>
@@ -278,7 +290,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type={showPassword ? 'text' : 'password'} required placeholder="Min. 6 characters"
                       value={form.password}
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
-                      className="w-full pl-8 pr-8 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-8 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                     <button
                       type="button"
@@ -297,7 +309,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                       type={showPassword ? 'text' : 'password'} required placeholder="Re-enter password"
                       value={form.confirmPassword}
                       onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                      className="w-full pl-8 pr-3 py-2.5 sm:py-2 min-h-[42px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[14px] sm:text-[12px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     />
                   </div>
                 </div>
@@ -350,7 +362,7 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin, onGoToAdminLo
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 bg-[#0A84FF] hover:bg-[#0071E3] active:scale-[0.98] text-white font-medium rounded-[8px] flex items-center justify-center gap-2 transition disabled:opacity-50 text-[13px]"
+                  className="w-full py-3 sm:py-2.5 min-h-[44px] bg-[#0A84FF] hover:bg-[#0071E3] active:scale-[0.98] text-white font-medium rounded-[8px] flex items-center justify-center gap-2 transition disabled:opacity-50 text-[14px] sm:text-[13px]"
                 >
                   {loading ? (
                     <>

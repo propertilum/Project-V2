@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   CreditCard, Shield, Lock, Eye, EyeOff, User, AlertCircle,
-  ArrowRight, Zap, UserPlus, CheckCircle2
+  ArrowRight, Zap, UserPlus, CheckCircle2, ArrowLeft
 } from 'lucide-react';
 import { signInWithEmail, getAuthErrorMessage } from '../../lib/authService';
 import { getUserProfile } from '../../lib/firestoreService';
@@ -18,14 +18,29 @@ const ADMIN_CLICK_THRESHOLD = 5;
 export default function LoginPage({
   onLoginSuccess,
   onGoToSignup,
-  registeredUsers = []
+  registeredUsers = [],
+  initialMobileView = 'welcome'
 }) {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [adminClickCount, setAdminClickCount] = useState(0);
+  const [mobileAuthView, setMobileAuthView] = useState(initialMobileView);
+  const [isMobileTransitioning, setIsMobileTransitioning] = useState(false);
   const [form, setForm] = useState({ email: '', password: '', remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMobileAuthView(initialMobileView);
+  }, [initialMobileView]);
+
+  const handleMobileSwitch = (view) => {
+    setIsMobileTransitioning(true);
+    setTimeout(() => {
+      setMobileAuthView(view);
+      setIsMobileTransitioning(false);
+    }, 180);
+  };
 
   // Secret: Shift-click logo 5 times to reveal admin mode
   const handleLogoClick = (e) => {
@@ -35,6 +50,7 @@ export default function LoginPage({
     if (next >= ADMIN_CLICK_THRESHOLD) {
       setIsAdminMode(true);
       setAdminClickCount(0);
+      handleMobileSwitch('signin');
       setForm({ email: '', password: '', remember: false });
       setError('');
     }
@@ -207,62 +223,64 @@ export default function LoginPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col justify-center items-center p-4 font-sans text-[#F5F5F7] relative">
+    <div className="min-h-[100dvh] w-full bg-[#000000] flex flex-col justify-center items-center p-3 sm:p-4 py-6 sm:py-8 font-sans text-[#F5F5F7] relative overflow-y-auto">
 
       {/* Admin mode secret indicator */}
       {isAdminMode && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-          <div className="px-3 py-1 bg-[#FF453A]/15 border border-[#FF453A]/40 text-[#FF453A] text-[11px] font-medium rounded-full">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-sm text-center">
+          <div className="px-3 py-1 bg-[#FF453A]/15 border border-[#FF453A]/40 text-[#FF453A] text-[11px] font-medium rounded-full truncate">
             Administrator Mode — Restricted Access
           </div>
         </div>
       )}
 
-      <div className="w-full max-w-4xl relative">
+      <div className={`w-full max-w-md md:max-w-4xl mx-auto my-auto relative ${
+        isMobileTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'
+      }`}>
         <div className={`bg-[#1C1C1E] rounded-[16px] overflow-hidden grid grid-cols-1 md:grid-cols-2 border transition-all ${
           isAdminMode ? 'border-[#FF453A]/50' : 'border-[#38383A]'
         }`}>
 
-          {/* ── Left panel ── */}
-          <div className={`p-8 md:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#38383A] ${
-            isAdminMode ? 'bg-[#2C2C2E]/50' : 'bg-[#161618]'
-          }`}>
+          {/* ── Left panel / Mobile Welcome Card ── */}
+          <div className={`p-5 sm:p-6 md:p-10 flex-col justify-between border-b md:border-b-0 md:border-r border-[#38383A] ${
+            mobileAuthView === 'welcome' ? 'flex' : 'hidden md:flex'
+          } ${isAdminMode ? 'bg-[#2C2C2E]/50' : 'bg-[#161618]'}`}>
             <div>
               {/* Logo — secret shift-click target */}
               <div
-                className="flex items-center space-x-3 mb-8 cursor-default select-none"
+                className="flex items-center space-x-3 mb-4 md:mb-8 cursor-default select-none"
                 onClick={handleLogoClick}
                 title=""
               >
-                <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center text-white ${
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-[10px] flex items-center justify-center text-white shrink-0 ${
                   isAdminMode ? 'bg-[#FF453A]' : 'bg-[#0A84FF]'
                 }`}>
                   <CreditCard className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[17px] font-semibold tracking-tight block leading-none text-white">CardHub</span>
+                  <span className="text-[16px] sm:text-[17px] font-semibold tracking-tight block leading-none text-white">CardHub</span>
                   <span className="text-[10px] font-medium tracking-wider uppercase text-[#8E8E93] mt-1 block">
                     Virtual Card Vault
                   </span>
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] text-[11px] font-medium mb-4">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] text-[11px] font-medium mb-3 md:mb-4">
                 <Zap className="w-3.5 h-3.5" />
                 <span>{isAdminMode ? 'Restricted Console' : 'Secure Customer Access'}</span>
               </div>
 
-              <h1 className="text-[24px] font-bold mb-3 leading-snug tracking-tight text-white">
+              <h1 className="text-[20px] sm:text-[24px] font-bold mb-2 md:mb-3 leading-snug tracking-tight text-white">
                 {isAdminMode ? 'Platform Administration' : 'Your Virtual Card Vault'}
               </h1>
-              <p className="text-[#8E8E93] text-[13px] leading-relaxed">
+              <p className="text-[#8E8E93] text-[12px] sm:text-[13px] leading-relaxed">
                 {isAdminMode
                   ? 'Restricted portal for platform operators. Monitor accounts, audit card activity, and enforce security policies.'
                   : 'Issue virtual cards, set merchant-level spend caps, isolate subscriptions, and control digital spending.'}
               </p>
 
               {!isAdminMode && (
-                <div className="mt-8 space-y-3">
+                <div className="mt-5 md:mt-8 space-y-2.5 md:space-y-3">
                   {[
                     { icon: Shield,       label: 'Zero-liability fraud protection', color: 'text-[#34C759]' },
                     { icon: Lock,         label: 'End-to-end encrypted vault',       color: 'text-[#0A84FF]' },
@@ -276,9 +294,31 @@ export default function LoginPage({
                   ))}
                 </div>
               )}
+
+              {/* Mobile Welcome Actions (< md only) */}
+              {!isAdminMode && (
+                <div className="mt-6 md:hidden space-y-2.5">
+                  <button
+                    type="button"
+                    onClick={() => handleMobileSwitch('signin')}
+                    className="w-full py-3 min-h-[44px] bg-[#0A84FF] hover:bg-[#0071E3] active:scale-[0.98] text-white font-medium rounded-[8px] flex items-center justify-center gap-2 transition text-[14px]"
+                  >
+                    <span>Sign In</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onGoToSignup}
+                    className="w-full py-3 min-h-[44px] bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] flex items-center justify-center gap-2 transition text-[14px]"
+                  >
+                    <UserPlus className="w-4 h-4 text-[#0A84FF]" />
+                    <span>Create a CardHub Account</span>
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div className="mt-8 pt-4 border-t border-[#38383A] text-[11px] text-[#8E8E93] flex items-center justify-between">
+            <div className="mt-6 md:mt-8 pt-4 border-t border-[#38383A] text-[11px] text-[#8E8E93] flex flex-wrap gap-2 items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-[#34C759]" />
                 PCI-DSS Level 1 Compliant
@@ -288,10 +328,23 @@ export default function LoginPage({
           </div>
 
           {/* ── Right panel: Form ── */}
-          <div className="p-8 md:p-10 flex flex-col justify-center bg-[#1C1C1E]">
+          <div className={`p-5 sm:p-6 md:p-10 flex-col justify-center bg-[#1C1C1E] ${
+            mobileAuthView === 'signin' ? 'flex' : 'hidden md:flex'
+          }`}>
+            {/* Mobile Back Button (< md only) */}
+            <div className="md:hidden mb-4">
+              <button
+                type="button"
+                onClick={() => handleMobileSwitch('welcome')}
+                className="inline-flex items-center gap-1.5 text-[12px] text-[#8E8E93] hover:text-white transition py-1"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>← Back to Welcome</span>
+              </button>
+            </div>
 
-            <div className="mb-6">
-              <h2 className="text-[20px] font-semibold text-white tracking-tight">
+            <div className="mb-5 sm:mb-6">
+              <h2 className="text-[18px] sm:text-[20px] font-semibold text-white tracking-tight">
                 {isAdminMode ? 'Administrator Sign In' : 'Welcome Back'}
               </h2>
               <p className="text-[12px] text-[#8E8E93] mt-1">
@@ -318,7 +371,7 @@ export default function LoginPage({
                   <User className="w-4 h-4 text-[#8E8E93] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="email" required autoComplete="email"
-                    className="w-full pl-9 pr-4 py-2.5 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                    className="w-full pl-9 pr-4 py-3 sm:py-2.5 min-h-[44px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[15px] sm:text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
                     placeholder="you@example.com"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -332,7 +385,7 @@ export default function LoginPage({
                   <Lock className="w-4 h-4 text-[#8E8E93] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type={showPassword ? 'text' : 'password'} required autoComplete="current-password"
-                    className="w-full pl-9 pr-10 py-2.5 bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition"
+                    className="w-full pl-9 pr-10 py-3 sm:py-2.5 min-h-[44px] bg-[#2C2C2E] border border-[#38383A] focus:border-[#0A84FF] rounded-[8px] text-[15px] sm:text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-[#0A84FF] transition font-mono"
                     placeholder="••••••••••••"
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -340,14 +393,14 @@ export default function LoginPage({
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8E8E93] hover:text-white transition"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#8E8E93] hover:text-white transition"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-[#8E8E93] pt-0.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#8E8E93] pt-0.5">
                 <label className="flex items-center gap-2 cursor-pointer hover:text-white transition">
                   <input
                     type="checkbox"
@@ -363,7 +416,7 @@ export default function LoginPage({
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-2.5 text-white font-medium rounded-[8px] flex items-center justify-center gap-2 transition active:scale-[0.98] disabled:opacity-50 text-[13px] mt-2 ${
+                className={`w-full py-3 sm:py-2.5 min-h-[44px] text-white font-medium rounded-[8px] flex items-center justify-center gap-2 transition active:scale-[0.98] disabled:opacity-50 text-[14px] sm:text-[13px] mt-2 ${
                   isAdminMode
                     ? 'bg-[#FF453A] hover:bg-[#D70015]'
                     : 'bg-[#0A84FF] hover:bg-[#0071E3]'

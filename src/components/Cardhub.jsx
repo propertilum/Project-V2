@@ -151,6 +151,7 @@ export default function Cardhub() {
     if (session === 'paid' || session === 'active' || session === 'logged_in') return 'dashboard';
     return 'login';
   });
+  const [loginInitialMobileView, setLoginInitialMobileView] = useState('welcome');
   const [activeTab, setActiveTab] = useState('overview');
   const [isSectionTransitioning, setIsSectionTransitioning] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -543,6 +544,7 @@ export default function Cardhub() {
       setTransactionFilter('');
 
       setCurrentStep('login');
+      setLoginInitialMobileView('welcome');
       setActiveTab('overview');
       showToast('Session locked and signed out', 'info');
       setIsPageTransitioning(false);
@@ -864,7 +866,7 @@ export default function Cardhub() {
   // ── Step: Signup ────────────────────────────────────────────────────────────
   if (currentStep === 'signup') {
     return (
-      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
+      <div className={`min-h-screen w-full bg-[#000000] flex flex-col justify-center items-center ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast
           key={toast.id || 'toast-signup'}
           id={toast.id}
@@ -874,7 +876,10 @@ export default function Cardhub() {
         />
         <SignupPage
           onSignupSuccess={handleSignupSuccess}
-          onGoToLogin={() => handleStepTransition('login')}
+          onGoToLogin={(view = 'welcome') => {
+            setLoginInitialMobileView(view);
+            handleStepTransition('login');
+          }}
           onGoToAdminLogin={() => {
             localStorage.setItem('cardhub_session', 'admin');
             handleStepTransition('admin');
@@ -887,7 +892,7 @@ export default function Cardhub() {
   // ── Step: Login ─────────────────────────────────────────────────────────────
   if (currentStep === 'login') {
     return (
-      <div className={`min-h-screen w-full bg-[#000000] ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
+      <div className={`min-h-screen w-full bg-[#000000] flex flex-col justify-center items-center ${isPageTransitioning ? 'animate-screen-exit' : 'animate-screen-enter'}`}>
         <Toast
           key={toast.id || 'toast-login'}
           id={toast.id}
@@ -903,6 +908,7 @@ export default function Cardhub() {
             handleStepTransition('admin');
           }}
           registeredUsers={users}
+          initialMobileView={loginInitialMobileView}
         />
       </div>
     );
@@ -1076,7 +1082,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'transactions' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <TransactionsTab
                   transactions={transactions}
                   cards={cards}
@@ -1090,7 +1096,7 @@ export default function Cardhub() {
 
             {/* Shield Hub: Segmented Rules & Alerts Switcher */}
             {(activeTab === 'rules' || activeTab === 'alerts') && (
-              <div className="p-4 space-y-4">
+              <div className="p-3 sm:p-4 space-y-4">
                 <div className="flex rounded-[10px] bg-[#1C1C1E] border border-[#38383A] p-1 shadow-xs">
                   <button
                     onClick={() => handleTabChange('rules')}
@@ -1112,7 +1118,7 @@ export default function Cardhub() {
                   >
                     <span>Security Alerts</span>
                     {getUnresolvedAlertsCount(alerts) > 0 && (
-                      <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold ${
+                      <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold ${
                         activeTab === 'alerts' ? 'bg-white text-[#FF453A]' : 'bg-[#FF453A] text-white'
                       }`}>
                         {getUnresolvedAlertsCount(alerts)}
@@ -1144,7 +1150,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'connections' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <ConnectionsTab
                   connections={connections}
                   onSyncConnection={handleSyncConnection}
@@ -1156,7 +1162,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'customizer' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <CardStudioTab
                   activeCard={activeCard}
                   onUpdateActiveCard={(fields) => activeCard && handleUpdateCard(activeCard.id, fields)}
@@ -1166,7 +1172,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'spending' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <SpendingTab
                   transactions={transactions}
                   cards={cards}
@@ -1176,7 +1182,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'subscriptions' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <SubscriptionsTab
                   subscriptions={subscriptions}
                   cards={cards}
@@ -1189,7 +1195,7 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'security' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <SecurityTab
                   cards={cards}
                   sessions={sessions}
@@ -1207,13 +1213,13 @@ export default function Cardhub() {
             )}
 
             {activeTab === 'activity' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <ActivityTab activityLogs={activityLogs} isLoading={!isDataLoaded} />
               </div>
             )}
 
             {activeTab === 'settings' && (
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <SettingsTab
                   user={activeCard}
                   currentUser={currentUser}

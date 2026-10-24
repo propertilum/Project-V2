@@ -89,7 +89,7 @@ export default function MobileVaultMenu({
   ];
 
   return (
-    <div className="p-5 flex flex-col gap-6 pb-12">
+    <div className="p-3.5 sm:p-5 flex flex-col gap-5 sm:gap-6 pb-12">
       {/* User Profile Card */}
       <div className="p-4 rounded-[14px] bg-[#1C1C1E] border border-[#38383A] flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ export default function MobileVaultMenu({
                       <div className="text-xs font-semibold text-[#F5F5F7] flex items-center gap-2">
                         <span>{item.label}</span>
                         {item.badge && (
-                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full bg-[#FF453A] text-white">
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full bg-[#FF453A] text-white">
                             {item.badge}
                           </span>
                         )}
