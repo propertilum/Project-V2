@@ -40,7 +40,7 @@ export default function ConnectionsTab({
       {/* Overview & Trust Notice */}
       <div className="p-5 rounded-[12px] bg-[#1C1C1E] border border-[#38383A] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <h2 className="text-sm font-semibold text-[#F5F5F7] tracking-tight">
               Financial Data Providers &amp; Integrations
             </h2>

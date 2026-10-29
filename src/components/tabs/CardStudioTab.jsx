@@ -104,7 +104,7 @@ export default function CardStudioTab({
             <label className="block font-medium text-[#8E8E93] text-[11px] uppercase tracking-wider mb-2.5">
               2. Holographic Surface Texture
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 min-[440px]:grid-cols-3 sm:grid-cols-5 gap-2">
               {[
                 { id: 'circuit', name: 'Circuit Grid' },
                 { id: 'dots', name: 'Dot Matrix' },

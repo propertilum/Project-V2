@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Plus, Shield } from 'lucide-react';
 import Modal from '../ui/Modal';
+import Select from '../ui/Select';
 
 export default function TopUpModal({ isOpen, onClose, onTopUpSuccess }) {
   const [amount, setAmount] = useState('100');
@@ -63,16 +64,16 @@ export default function TopUpModal({ isOpen, onClose, onTopUpSuccess }) {
 
         <div>
           <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Payment Channel</label>
-          <select
+          <Select
             value={channel}
-            onChange={(e) => setChannel(e.target.value)}
-            className="w-full p-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-          >
-            <option value="card">Primary Bank Debit Card (Instant)</option>
-            <option value="paypal">PayPal Express Checkout</option>
-            <option value="crypto">Crypto Gateway (USDT TRC20 / BTC)</option>
-            <option value="wire">Direct Bank Wire Transfer</option>
-          </select>
+            onChange={setChannel}
+            options={[
+              { value: 'card', label: 'Primary Bank Debit Card (Instant)' },
+              { value: 'paypal', label: 'PayPal Express Checkout' },
+              { value: 'crypto', label: 'Crypto Gateway (USDT TRC20 / BTC)' },
+              { value: 'wire', label: 'Direct Bank Wire Transfer' },
+            ]}
+          />
         </div>
 
         <div className="p-3 bg-[#0A84FF]/10 text-[#0A84FF] rounded-[8px] text-[11px] leading-relaxed border border-[#0A84FF]/20">

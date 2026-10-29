@@ -99,31 +99,37 @@ export default function NewCardModal({ isOpen, onClose, onCardCreated, activeUse
       maxWidth="max-w-2xl"
     >
       <div className="space-y-5 text-xs">
-        {/* Step Indicator Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#38383A]">
-          <div className="flex items-center gap-1 sm:gap-1.5">
+        {/* Modern Segmented Step Indicator */}
+        <div className="pb-3 border-b border-[#38383A] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-[#0A84FF] text-white flex items-center justify-center text-[10px] font-bold font-mono">
+                {step}
+              </span>
+              <span className="font-semibold text-xs text-[#F5F5F7]">
+                {STEPS[step - 1]?.label}
+              </span>
+            </div>
+            <span className="text-[#8E8E93] font-mono text-[11px]">
+              Step {step} of 6
+            </span>
+          </div>
+
+          {/* 6-segment smooth progress bar */}
+          <div className="grid grid-cols-6 gap-1.5">
             {STEPS.map((s) => (
               <div
                 key={s.id}
-                className={`flex items-center gap-1.5 px-2 py-1 rounded-[6px] transition-all ${
-                  step === s.id
-                    ? 'bg-[#0A84FF] text-white font-medium'
-                    : step > s.id
-                      ? 'bg-[#2C2C2E] text-[#34C759] font-medium'
-                      : 'text-[#8E8E93]'
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  step > s.id
+                    ? 'bg-[#34C759]'
+                    : step === s.id
+                      ? 'bg-[#0A84FF] shadow-[0_0_8px_rgba(10,132,255,0.6)]'
+                      : 'bg-[#2C2C2E]'
                 }`}
-              >
-                <span className="w-4 h-4 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-mono">
-                  {step > s.id ? <Check className="w-2.5 h-2.5" /> : s.id}
-                </span>
-                <span className="hidden sm:inline text-[11px]">{s.label}</span>
-              </div>
+              />
             ))}
           </div>
-
-          <span className="text-[#8E8E93] font-mono text-[11px]">
-            Step {step} of 6
-          </span>
         </div>
 
         {/* Step 1: Purpose */}
@@ -147,7 +153,7 @@ export default function NewCardModal({ isOpen, onClose, onCardCreated, activeUse
               <label className="block font-medium text-[#8E8E93] mb-2 font-mono uppercase text-[11px]">
                 Card Purpose Category
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 min-[440px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                 {[
                   { id: 'subscription', label: 'Subscription / SaaS', desc: 'Recurring billings' },
                   { id: 'shopping', label: 'E-Commerce Retail', desc: 'Online checkouts' },
@@ -275,7 +281,7 @@ export default function NewCardModal({ isOpen, onClose, onCardCreated, activeUse
 
             <div className="pt-2">
               <label className="block font-medium text-[#8E8E93] mb-2 font-mono uppercase text-[11px]">Channel Controls</label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <label className="p-3 bg-[#2C2C2E]/60 rounded-[8px] border border-[#38383A] flex items-center justify-between cursor-pointer">
                   <span className="font-medium text-[#F5F5F7]">Allow Online E-Commerce</span>
                   <input
@@ -381,7 +387,7 @@ export default function NewCardModal({ isOpen, onClose, onCardCreated, activeUse
                 <Badge variant="demo" size="xs">Simulation Ready</Badge>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                 <div>
                   <span className="text-[#8E8E93] block text-[11px]">Card Label</span>
                   <span className="text-[#F5F5F7] font-medium">{label || 'Virtual Protection Card'}</span>

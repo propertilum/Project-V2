@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import Select from '../ui/Select';
 import { SkeletonTable } from '../ui/Skeleton';
 import { formatCurrency } from '../../utils/formatters';
 import { CATEGORIES } from '../../data/constants';
@@ -150,7 +151,7 @@ export default function TransactionsTab({
       <div className="bg-[#1C1C1E] p-4 rounded-[12px] border border-[#38383A] space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 text-xs">
           {/* Search Input */}
-          <div className="lg:col-span-2 relative">
+          <div className="sm:col-span-2 lg:col-span-2 relative">
             <Search className="w-3.5 h-3.5 text-[#8E8E93] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -160,7 +161,7 @@ export default function TransactionsTab({
                 setSearch(e.target.value);
                 if (!e.target.value && onFilterCleared) onFilterCleared();
               }}
-              className="w-full pl-8 pr-8 py-1.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF] text-xs"
+              className="w-full pl-8 pr-8 py-1.5 h-8 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF] text-xs box-border"
             />
             {search && (
               <button
@@ -175,79 +176,85 @@ export default function TransactionsTab({
 
           {/* Card Filter */}
           <div>
-            <select
+            <Select
               value={selectedCardId}
-              onChange={(e) => setSelectedCardId(e.target.value)}
-              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            >
-              <option value="all">All Cards</option>
-              {cards.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label} (··{c.last4 || c.cardNumber?.slice(-4) || '4242'})
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedCardId}
+              options={[
+                { value: 'all', label: 'All Cards' },
+                ...cards.map((c) => ({
+                  value: c.id,
+                  label: `${c.label} (··${c.last4 || c.cardNumber?.slice(-4) || '4242'})`,
+                })),
+              ]}
+              size="sm"
+            />
           </div>
 
           {/* Category Filter */}
           <div>
-            <select
+            <Select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat === 'All' ? 'All Categories' : cat}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedCategory}
+              options={CATEGORIES.map((cat) => ({
+                value: cat,
+                label: cat === 'All' ? 'All Categories' : cat,
+              }))}
+              size="sm"
+            />
           </div>
 
           {/* Status Filter */}
           <div>
-            <select
+            <Select
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            >
-              <option value="all">All Statuses</option>
-              <option value="completed">Completed / Settled</option>
-              <option value="declined">Declined / Blocked</option>
-              <option value="pending">Pending Auth</option>
-            </select>
+              onChange={setSelectedStatus}
+              options={[
+                { value: 'all', label: 'All Statuses' },
+                { value: 'completed', label: 'Completed' },
+                { value: 'declined', label: 'Declined / Blocked' },
+                { value: 'pending', label: 'Pending Auth' },
+              ]}
+              size="sm"
+            />
           </div>
 
           {/* Type Filter */}
           <div>
-            <select
+            <Select
               value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            >
-              <option value="all">All Types</option>
-              <option value="debit">Debits</option>
-              <option value="credit">Credits</option>
-            </select>
+              onChange={setSelectedType}
+              options={[
+                { value: 'all', label: 'All Types' },
+                { value: 'debit', label: 'Debits' },
+                { value: 'credit', label: 'Credits' },
+              ]}
+              size="sm"
+            />
           </div>
+        </div>
 
-          {/* Sort Order */}
-          <div>
-            <select
+        {/* Sort Bar row */}
+        <div className="flex items-center justify-between pt-1 border-t border-[#38383A]/50 text-xs">
+          <span className="text-[11px] text-[#8E8E93] font-mono">
+            Showing {filteredTransactions.length} of {transactions.length} authorizations
+          </span>
+          <div className="w-44">
+            <Select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full py-1.5 px-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            >
-              <option value="date-desc">Newest First</option>
-              <option value="date-asc">Oldest First</option>
-              <option value="amount-desc">Amount (High to Low)</option>
-              <option value="amount-asc">Amount (Low to High)</option>
-            </select>
+              onChange={setSortBy}
+              options={[
+                { value: 'date-desc', label: 'Newest First' },
+                { value: 'date-asc', label: 'Oldest First' },
+                { value: 'amount-desc', label: 'Amount: High to Low' },
+                { value: 'amount-asc', label: 'Amount: Low to High' },
+              ]}
+              size="sm"
+            />
           </div>
         </div>
       </div>
 
-      {/* 3. Transaction Ledger Table */}
+      {/* 3. Transaction Ledger Table & Native Mobile View */}
       <div className="bg-[#1C1C1E] rounded-[12px] border border-[#38383A] shadow-sm overflow-hidden">
         {isLoading ? (
           <SkeletonTable rows={6} />
@@ -269,74 +276,65 @@ export default function TransactionsTab({
             </Button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-[#38383A] bg-[#2C2C2E]/60 text-[#8E8E93] uppercase font-mono text-[10px] tracking-wider">
-                  <th className="py-3 px-5">Merchant / Destination</th>
-                  <th className="py-3 px-4">Card Used</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Date &amp; Time</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-5 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#38383A]/60 font-normal">
-                {filteredTransactions.map((tx) => {
-                  const isCredit = tx.type === 'credit';
-                  const isDeclined = tx.status === 'declined';
-                  const matchedCard = cards.find((c) => c.id === tx.cardId);
-                  const isBank = matchedCard?.source === 'bank_connection';
+          <>
+            {/* Mobile Native Transaction List View (Hidden on md+) */}
+            <div className="md:hidden divide-y divide-[#38383A]/60">
+              {filteredTransactions.map((tx) => {
+                const isCredit = tx.type === 'credit';
+                const isDeclined = tx.status === 'declined';
+                const matchedCard = cards.find((c) => c.id === tx.cardId);
 
-                  return (
-                    <tr
-                      key={tx.id}
-                      onClick={() => onSelectTransaction?.(tx)}
-                      className="hover:bg-[#2C2C2E]/60 transition cursor-pointer"
-                    >
-                      <td className="py-3 px-5 flex items-center gap-3">
-                        <div
-                          className={`w-7 h-7 rounded-[6px] flex items-center justify-center font-medium shrink-0 ${
-                            isDeclined
-                              ? 'bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30'
-                              : isCredit
-                                ? 'bg-[#34C759]/15 text-[#34C759]'
-                                : 'bg-[#2C2C2E] text-[#8E8E93]'
-                          }`}
-                        >
-                          {isCredit ? (
-                            <ArrowDownLeft className="w-3.5 h-3.5" />
-                          ) : (
-                            <ArrowUpRight className="w-3.5 h-3.5" />
-                          )}
+                return (
+                  <div
+                    key={tx.id}
+                    onClick={() => onSelectTransaction?.(tx)}
+                    className="p-3.5 hover:bg-[#2C2C2E]/60 active:bg-[#2C2C2E] transition flex items-center justify-between gap-3 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className={`w-8 h-8 rounded-[8px] flex items-center justify-center font-medium shrink-0 ${
+                          isDeclined
+                            ? 'bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30'
+                            : isCredit
+                              ? 'bg-[#34C759]/15 text-[#34C759]'
+                              : 'bg-[#2C2C2E] text-[#8E8E93]'
+                        }`}
+                      >
+                        {isCredit ? (
+                          <ArrowDownLeft className="w-4 h-4" />
+                        ) : (
+                          <ArrowUpRight className="w-4 h-4" />
+                        )}
+                      </div>
+
+                      <div className="min-w-0">
+                        <span className={`font-semibold text-xs block truncate ${isDeclined ? 'text-[#FF453A]' : 'text-[#F5F5F7]'}`}>
+                          {tx.merchant}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-[11px] text-[#8E8E93] font-mono mt-0.5 truncate">
+                          <span>{matchedCard?.label || tx.cardName || 'Primary Card'}</span>
+                          <span>•</span>
+                          <span>{tx.category}</span>
                         </div>
-                        <div>
-                          <span className={`font-medium block ${isDeclined ? 'text-[#FF453A]' : 'text-[#F5F5F7]'}`}>
-                            {tx.merchant}
-                          </span>
-                          {tx.authCode && (
-                            <span className="text-[10px] text-[#8E8E93] font-mono">
-                              Auth: {tx.authCode}
-                            </span>
-                          )}
+                        <div className="text-[10px] text-[#636366] mt-0.5">
+                          {tx.date}
                         </div>
-                      </td>
+                      </div>
+                    </div>
 
-                      <td className="py-3 px-4 text-[#F5F5F7]">
-                        <div className="flex items-center gap-1.5">
-                          {isBank ? (
-                            <Building2 className="w-3.5 h-3.5 text-[#0A84FF] shrink-0" />
-                          ) : (
-                            <Layers className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
-                          )}
-                          <span>{tx.cardName || 'Primary Card'}</span>
-                        </div>
-                      </td>
-
-                      <td className="py-3 px-4 text-[#8E8E93]">{tx.category}</td>
-                      <td className="py-3 px-4 text-[#636366] font-mono text-[11px]">{tx.date}</td>
-
-                      <td className="py-3 px-4">
+                    <div className="text-right shrink-0">
+                      <div
+                        className={`font-mono font-semibold text-xs tabular-nums ${
+                          isDeclined
+                            ? 'text-[#8E8E93] line-through'
+                            : isCredit
+                              ? 'text-[#34C759]'
+                              : 'text-[#F5F5F7]'
+                        }`}
+                      >
+                        {isCredit ? `+${formatCurrency(tx.amount)}` : `-${formatCurrency(tx.amount)}`}
+                      </div>
+                      <div className="mt-1">
                         <Badge
                           variant={
                             isDeclined
@@ -349,27 +347,116 @@ export default function TransactionsTab({
                         >
                           {tx.status}
                         </Badge>
-                      </td>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-                      <td
-                        className={`py-3 px-5 text-right font-mono font-medium text-sm tabular-nums ${
-                          isDeclined
-                            ? 'text-[#636366] line-through'
-                            : isCredit
-                              ? 'text-[#34C759]'
-                              : 'text-[#F5F5F7]'
-                        }`}
+            {/* Desktop Full Ledger Table View (Hidden on mobile) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[640px]">
+                <thead>
+                  <tr className="border-b border-[#38383A] bg-[#2C2C2E]/60 text-[#8E8E93] uppercase font-mono text-[10px] tracking-wider">
+                    <th className="py-3 px-5">Merchant / Destination</th>
+                    <th className="py-3 px-4">Card Used</th>
+                    <th className="py-3 px-4">Category</th>
+                    <th className="py-3 px-4">Date &amp; Time</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-5 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#38383A]/60 font-normal">
+                  {filteredTransactions.map((tx) => {
+                    const isCredit = tx.type === 'credit';
+                    const isDeclined = tx.status === 'declined';
+                    const matchedCard = cards.find((c) => c.id === tx.cardId);
+                    const isBank = matchedCard?.source === 'bank_connection';
+
+                    return (
+                      <tr
+                        key={tx.id}
+                        onClick={() => onSelectTransaction?.(tx)}
+                        className="hover:bg-[#2C2C2E]/60 transition cursor-pointer"
                       >
-                        {isCredit
-                          ? `+${formatCurrency(tx.amount)}`
-                          : `-${formatCurrency(tx.amount)}`}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        <td className="py-3 px-5 flex items-center gap-3">
+                          <div
+                            className={`w-7 h-7 rounded-[6px] flex items-center justify-center font-medium shrink-0 ${
+                              isDeclined
+                                ? 'bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30'
+                                : isCredit
+                                  ? 'bg-[#34C759]/15 text-[#34C759]'
+                                  : 'bg-[#2C2C2E] text-[#8E8E93]'
+                            }`}
+                          >
+                            {isCredit ? (
+                              <ArrowDownLeft className="w-3.5 h-3.5" />
+                            ) : (
+                              <ArrowUpRight className="w-3.5 h-3.5" />
+                            )}
+                          </div>
+                          <div>
+                            <span className={`font-medium block ${isDeclined ? 'text-[#FF453A]' : 'text-[#F5F5F7]'}`}>
+                              {tx.merchant}
+                            </span>
+                            {tx.authCode && (
+                              <span className="text-[10px] text-[#8E8E93] font-mono">
+                                Auth: {tx.authCode}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-4 text-[#F5F5F7]">
+                          <div className="flex items-center gap-1.5">
+                            {isBank ? (
+                              <Building2 className="w-3.5 h-3.5 text-[#0A84FF] shrink-0" />
+                            ) : (
+                              <Layers className="w-3.5 h-3.5 text-[#34C759] shrink-0" />
+                            )}
+                            <span>{tx.cardName || 'Primary Card'}</span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-4 text-[#8E8E93]">{tx.category}</td>
+                        <td className="py-3 px-4 text-[#636366] font-mono text-[11px]">{tx.date}</td>
+
+                        <td className="py-3 px-4">
+                          <Badge
+                            variant={
+                              isDeclined
+                                ? 'red'
+                                : tx.status === 'pending'
+                                  ? 'orange'
+                                  : 'green'
+                            }
+                            size="xs"
+                          >
+                            {tx.status}
+                          </Badge>
+                        </td>
+
+                        <td
+                          className={`py-3 px-5 text-right font-mono font-medium text-sm tabular-nums ${
+                            isDeclined
+                              ? 'text-[#636366] line-through'
+                              : isCredit
+                                ? 'text-[#34C759]'
+                                : 'text-[#F5F5F7]'
+                          }`}
+                        >
+                          {isCredit
+                            ? `+${formatCurrency(tx.amount)}`
+                            : `-${formatCurrency(tx.amount)}`}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

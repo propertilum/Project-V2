@@ -13,8 +13,8 @@ export default function MobileHeader({
   const isSubPage = activeTab !== 'overview' && activeTab !== 'vault-menu';
 
   return (
-    <header className="md:hidden sticky top-0 z-30 bg-[#000000]/85 backdrop-blur-2xl border-b border-[#38383A] px-2.5 sm:px-4 py-2.5 select-none">
-      <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+    <header className="md:hidden sticky top-0 z-30 bg-[#000000]/85 backdrop-blur-2xl border-b border-[#38383A] px-2.5 sm:px-4 h-[52px] flex items-center select-none box-border">
+      <div className="w-full flex items-center justify-between gap-1.5 sm:gap-2">
         {/* Left: Brand or Back Button */}
         {isSubPage ? (
           <button

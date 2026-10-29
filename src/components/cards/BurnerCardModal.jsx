@@ -79,6 +79,27 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
       icon={Flame}
       maxWidth="max-w-lg"
     >
+      {/* Step Indicator Header */}
+      <div className="pb-3 mb-4 border-b border-[#38383A] space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-[#FF453A] text-white flex items-center justify-center text-[10px] font-bold font-mono">
+              {step}
+            </span>
+            <span className="font-semibold text-[#F5F5F7]">
+              {step === 1 ? 'Configure Burner Parameters' : 'Authorize & Issue Token'}
+            </span>
+          </div>
+          <span className="text-[#8E8E93] font-mono text-[11px]">
+            Step {step} of 2
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className={`h-1.5 rounded-full transition-all duration-300 bg-[#FF453A] ${step === 1 ? 'shadow-[0_0_8px_rgba(255,69,58,0.6)]' : ''}`} />
+          <div className={`h-1.5 rounded-full transition-all duration-300 ${step === 2 ? 'bg-[#FF453A] shadow-[0_0_8px_rgba(255,69,58,0.6)]' : 'bg-[#2C2C2E]'}`} />
+        </div>
+      </div>
+
       {step === 1 ? (
         <form onSubmit={handleNext} className="space-y-4 text-xs text-[#F5F5F7]">
           <div>
@@ -97,7 +118,7 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
 
           <div>
             <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Usage Mode</label>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <button
                 type="button"
                 onClick={() => setUsageType('single')}
@@ -134,7 +155,7 @@ export default function BurnerCardModal({ isOpen, onClose, onCardCreated, active
 
           <div>
             <label className="block font-medium text-[#8E8E93] mb-1 font-mono uppercase text-[11px]">Lifespan &amp; Expiration</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 min-[440px]:grid-cols-4 gap-2">
               {Object.entries(durationLabels).map(([key, item]) => (
                 <button
                   key={key}

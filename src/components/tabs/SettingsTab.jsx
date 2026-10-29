@@ -3,6 +3,7 @@ import {
   Settings, User, Download, RefreshCw, Database, AlertTriangle 
 } from 'lucide-react';
 import Badge from '../ui/Badge';
+import Select from '../ui/Select';
 import { SkeletonTable } from '../ui/Skeleton';
 
 export default function SettingsTab({
@@ -29,23 +30,23 @@ export default function SettingsTab({
     <div className="max-w-4xl space-y-6 text-[13px] text-[#F5F5F7]">
       {/* 1. Profile Information */}
       <div className="bg-[#1C1C1E] p-6 rounded-[12px] border border-[#38383A] space-y-5">
-        <div className="border-b border-[#38383A] pb-4 flex items-center justify-between">
-          <div>
+        <div className="border-b border-[#38383A] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="min-w-0">
             <h2 className="text-[15px] font-semibold text-[#F5F5F7] flex items-center gap-2">
-              <User className="w-4 h-4 text-[#0A84FF]" />
+              <User className="w-4 h-4 text-[#0A84FF] shrink-0" />
               <span>Account Profile &amp; Legal Entity</span>
             </h2>
             <p className="text-[12px] text-[#8E8E93] mt-0.5">Primary verified account identity for virtual card issuance.</p>
           </div>
 
           {currentUser?.emailVerified ? (
-            <Badge variant="green" size="sm" dot>
+            <Badge variant="green" size="sm" dot className="self-start sm:self-auto">
               Verified Account
             </Badge>
           ) : (
             <button
               onClick={onOpenVerifyEmail}
-              className="px-3 py-1 rounded-full bg-[#FF9F0A]/15 hover:bg-[#FF9F0A]/25 text-[#FF9F0A] border border-[#FF9F0A]/30 text-[11px] font-medium flex items-center gap-1.5 transition active:scale-[0.98]"
+              className="px-3 py-1 rounded-full bg-[#FF9F0A]/15 hover:bg-[#FF9F0A]/25 text-[#FF9F0A] border border-[#FF9F0A]/30 text-[11px] font-medium flex items-center gap-1.5 transition active:scale-[0.98] shrink-0 whitespace-nowrap self-start sm:self-auto"
               title="Click to verify your email"
             >
               <AlertTriangle className="w-3.5 h-3.5 text-[#FF9F0A]" />
@@ -104,30 +105,30 @@ export default function SettingsTab({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium text-[#8E8E93] mb-1.5 text-[11px] uppercase tracking-wider">Vault Display Currency</label>
-            <select
+            <Select
               value={settings.currency || 'USD ($)'}
-              onChange={(e) => onUpdateSettings({ currency: e.target.value })}
-              className="w-full p-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF]"
-            >
-              <option value="USD ($)">USD ($) - United States Dollar</option>
-              <option value="EUR (€)">EUR (€) - Euro</option>
-              <option value="GBP (£)">GBP (£) - British Pound</option>
-              <option value="PKR (Rs)">PKR (Rs) - Pakistani Rupee</option>
-            </select>
+              onChange={(val) => onUpdateSettings({ currency: val })}
+              options={[
+                { value: 'USD ($)', label: 'USD ($) - United States Dollar' },
+                { value: 'EUR (€)', label: 'EUR (€) - Euro' },
+                { value: 'GBP (£)', label: 'GBP (£) - British Pound' },
+                { value: 'PKR (Rs)', label: 'PKR (Rs) - Pakistani Rupee' },
+              ]}
+            />
           </div>
 
           <div>
             <label className="block font-medium text-[#8E8E93] mb-1.5 text-[11px] uppercase tracking-wider">Idle Inactivity Lockout</label>
-            <select
+            <Select
               value={settings.sessionTimeout || '30 mins'}
-              onChange={(e) => onUpdateSettings({ sessionTimeout: e.target.value })}
-              className="w-full p-2.5 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] font-medium text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF]"
-            >
-              <option value="15 mins">15 minutes</option>
-              <option value="30 mins">30 minutes (Recommended)</option>
-              <option value="1 hour">1 hour</option>
-              <option value="4 hours">4 hours</option>
-            </select>
+              onChange={(val) => onUpdateSettings({ sessionTimeout: val })}
+              options={[
+                { value: '15 mins', label: '15 minutes' },
+                { value: '30 mins', label: '30 minutes (Recommended)' },
+                { value: '1 hour', label: '1 hour' },
+                { value: '4 hours', label: '4 hours' },
+              ]}
+            />
           </div>
         </div>
 

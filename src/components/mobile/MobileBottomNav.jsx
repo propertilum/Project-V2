@@ -56,19 +56,19 @@ export default function MobileBottomNav({
             <button
               key={item.id}
               onClick={item.onClick}
-              className={`relative flex flex-col items-center justify-center py-1 px-3 rounded-[10px] transition-all duration-150 active:scale-[0.92] ${
+              className={`relative w-16 flex flex-col items-center justify-center py-1 px-1 rounded-[10px] transition-colors duration-150 active:scale-[0.94] shrink-0 box-border ${
                 active ? 'text-[#0A84FF]' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
               }`}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${active ? 'scale-110' : ''}`} />
+                <Icon className={`w-5 h-5 transition-transform duration-150 ${active ? 'scale-105' : ''}`} />
                 {item.badge && (
                   <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full bg-[#FF453A] text-white text-[9px] font-mono font-bold flex items-center justify-center shadow-sm">
                     {item.badge}
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] font-medium tracking-tight mt-1 ${active ? 'font-semibold' : ''}`}>
+              <span className="text-[10px] font-medium tracking-tight mt-1 truncate">
                 {item.label}
               </span>
               {active && (

@@ -60,7 +60,7 @@ export default function ActivityTab({ activityLogs = [], isLoading = false }) {
         </div>
 
         {/* macOS segmented filter */}
-        <div className="flex bg-[#2C2C2E] border border-[#38383A] p-0.5 rounded-[8px] self-start sm:self-auto overflow-x-auto no-scrollbar">
+        <div className="flex bg-[#2C2C2E] border border-[#38383A] p-0.5 rounded-[8px] w-full sm:w-auto max-w-full overflow-x-auto no-scrollbar shrink-0">
           {filterOptions.map((opt) => (
             <button
               key={opt.id}
@@ -109,9 +109,9 @@ export default function ActivityTab({ activityLogs = [], isLoading = false }) {
                   </div>
 
                   {/* Event Details Card */}
-                  <div className="flex-1 bg-[#2C2C2E] p-4 rounded-[8px] border border-[#38383A] hover:border-[#48484A] transition space-y-1">
+                  <div className="flex-1 bg-[#2C2C2E] p-4 rounded-[8px] border border-[#38383A] hover:border-[#48484A] transition space-y-1 min-w-0">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2 min-w-0">
                         <span className="font-semibold text-[#F5F5F7] text-[13px]">{log.title}</span>
                         <Badge
                           variant={getBadgeVariant(log.severity)}
@@ -121,7 +121,7 @@ export default function ActivityTab({ activityLogs = [], isLoading = false }) {
                         </Badge>
                       </div>
 
-                      <span className="text-[11px] font-mono text-[#8E8E93]">
+                      <span className="text-[11px] font-mono text-[#8E8E93] shrink-0">
                         {formatRelativeTime(log.timestamp)}
                       </span>
                     </div>

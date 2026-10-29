@@ -161,12 +161,12 @@ export default function MobileCardDeck({
         </div>
 
         {/* Carousel Pagination Dots */}
-        <div className="flex items-center gap-1.5 mt-3">
+        <div className="flex items-center justify-center gap-1.5 mt-3 max-w-full overflow-x-auto no-scrollbar py-0.5 px-2">
           {cards.map((card, idx) => (
             <button
               key={card.id}
               onClick={() => setActiveCardId(card.id)}
-              className={`h-1.5 rounded-full transition-all duration-200 ${
+              className={`h-1.5 rounded-full transition-all duration-200 shrink-0 ${
                 card.id === activeCard.id
                   ? 'w-5 bg-[#0A84FF]'
                   : 'w-1.5 bg-[#38383A]'
@@ -175,7 +175,7 @@ export default function MobileCardDeck({
             />
           ))}
           {cards.length > 1 && (
-            <span className="text-[10px] font-mono text-[#8E8E93] ml-1.5">
+            <span className="text-[10px] font-mono text-[#8E8E93] ml-1.5 shrink-0">
               {activeCardIndex + 1}/{cards.length}
             </span>
           )}

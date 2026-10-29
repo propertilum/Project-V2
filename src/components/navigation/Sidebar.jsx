@@ -143,10 +143,10 @@ export default function Sidebar({
                     <button
                       key={id}
                       onClick={() => { setActiveTab(id); setIsOpenMobile(false); }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-[8px] transition-all duration-100 group active:scale-[0.98] ${
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-[8px] transition-all duration-100 group active:scale-[0.98] border ${
                         isActive
-                          ? 'bg-[#2C2C2E] text-[#F5F5F7] font-medium border border-[#38383A]'
-                          : 'text-[#8E8E93] hover:bg-[#2C2C2E]/60 hover:text-[#F5F5F7]'
+                          ? 'bg-[#2C2C2E] text-[#F5F5F7] font-medium border-[#38383A]'
+                          : 'border-transparent text-[#8E8E93] hover:bg-[#2C2C2E]/60 hover:text-[#F5F5F7]'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">

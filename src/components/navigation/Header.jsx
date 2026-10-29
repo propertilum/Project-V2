@@ -98,7 +98,7 @@ export default function Header({
         <button
           onClick={onPanicFreezeAll}
           title={allCardsFrozen ? 'Click to unfreeze all virtual cards' : 'Emergency freeze: lock all virtual cards instantly'}
-          className={`px-3 py-2 text-xs font-medium rounded-[8px] transition active:scale-[0.98] flex items-center gap-1.5 border ${
+          className={`min-w-[145px] justify-center px-3 py-2 text-xs font-medium rounded-[8px] transition active:scale-[0.98] flex items-center gap-1.5 border box-border ${
             allCardsFrozen
               ? 'bg-[#FF453A]/15 border-[#FF453A]/30 text-[#FF453A] hover:bg-[#FF453A]/25'
               : 'bg-[#1C1C1E] border-[#38383A] text-[#8E8E93] hover:text-[#FF453A] hover:border-[#FF453A]/40'

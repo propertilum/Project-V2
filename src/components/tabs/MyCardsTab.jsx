@@ -85,35 +85,38 @@ export default function MyCardsTab({
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#38383A]">
         {/* Source Pills (macOS Segmented Control) */}
-        <div className="flex flex-wrap items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs">
+        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs overflow-x-auto no-scrollbar w-full sm:w-auto">
           <button
             onClick={() => setSourceFilter('all')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              sourceFilter === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              sourceFilter === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            All Cards ({cards.length})
+            <span className="sm:hidden">All ({cards.length})</span>
+            <span className="hidden sm:inline">All Cards ({cards.length})</span>
           </button>
           <button
             onClick={() => setSourceFilter('bank_connection')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              sourceFilter === 'bank_connection' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              sourceFilter === 'bank_connection' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Linked Bank ({bankCardsCount})
+            <span className="sm:hidden">Bank ({bankCardsCount})</span>
+            <span className="hidden sm:inline">Linked Bank ({bankCardsCount})</span>
           </button>
           <button
             onClick={() => setSourceFilter('cardhub_issuer')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              sourceFilter === 'cardhub_issuer' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              sourceFilter === 'cardhub_issuer' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Virtual Protection ({virtualCardsCount})
+            <span className="sm:hidden">Virtual ({virtualCardsCount})</span>
+            <span className="hidden sm:inline">Virtual Protection ({virtualCardsCount})</span>
           </button>
           <button
             onClick={() => setSourceFilter('demo')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              sourceFilter === 'demo' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              sourceFilter === 'demo' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             Demo ({demoCardsCount})
@@ -128,7 +131,7 @@ export default function MyCardsTab({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search cards..."
-            className="w-full bg-[#1C1C1E] text-[#F5F5F7] text-xs pl-8 pr-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
+            className="w-full bg-[#1C1C1E] text-[#F5F5F7] text-xs pl-8 pr-3 py-1.5 h-8 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] box-border"
           />
         </div>
       </div>

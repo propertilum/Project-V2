@@ -136,8 +136,8 @@ export default function OverviewTab({
               )}
             </div>
 
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold text-[#F5F5F7]">
                   {highAlertsCount > 0
                     ? `${highAlertsCount} High Priority Security Alert`
@@ -283,9 +283,9 @@ export default function OverviewTab({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Active Card Preview & Controls */}
         <div className="lg:col-span-7 bg-[#1C1C1E] p-5 sm:p-6 rounded-[12px] border border-[#38383A] shadow-sm space-y-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-base font-semibold text-[#F5F5F7] tracking-tight">{activeCard.label}</h2>
                 <Badge
                   variant={
@@ -308,7 +308,7 @@ export default function OverviewTab({
 
             <button
               onClick={() => onNavigateTab('customizer')}
-              className="text-xs text-[#0A84FF] font-medium hover:underline"
+              className="text-xs text-[#0A84FF] font-medium hover:underline shrink-0 self-start sm:self-auto"
             >
               Card Studio
             </button>
@@ -545,8 +545,55 @@ export default function OverviewTab({
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        {/* Mobile View: Native Transaction List */}
+        <div className="md:hidden divide-y divide-[#38383A]/60">
+          {recentTransactions.map((tx) => (
+            <div
+              key={tx.id}
+              onClick={() => onSelectTransaction(tx)}
+              className="py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#2C2C2E]/40 active:bg-[#2C2C2E]/60 transition"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div
+                  className={`w-7 h-7 rounded-[6px] flex items-center justify-center font-medium shrink-0 ${
+                    tx.type === 'credit'
+                      ? 'bg-[#34C759]/15 text-[#34C759]'
+                      : 'bg-[#2C2C2E] text-[#8E8E93]'
+                  }`}
+                >
+                  {tx.type === 'credit' ? (
+                    <ArrowDownLeft className="w-3.5 h-3.5" />
+                  ) : (
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <span className="font-medium text-xs text-[#F5F5F7] block truncate">{tx.merchant}</span>
+                  <span className="text-[11px] text-[#8E8E93] font-mono block truncate">
+                    {tx.cardName || 'Card'} • {tx.category}
+                  </span>
+                </div>
+              </div>
+
+              <div className="text-right shrink-0">
+                <div
+                  className={`font-mono font-semibold text-xs tabular-nums ${
+                    tx.type === 'credit' ? 'text-[#34C759]' : 'text-[#F5F5F7]'
+                  }`}
+                >
+                  {tx.type === 'credit'
+                    ? `+${formatCurrency(tx.amount)}`
+                    : `-${formatCurrency(tx.amount)}`}
+                </div>
+                <span className="text-[10px] text-[#636366] block font-mono mt-0.5">{tx.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View: Ledger Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left text-xs min-w-[600px]">
             <thead>
               <tr className="border-b border-[#38383A] text-[#8E8E93] uppercase font-mono text-[10px] tracking-wider">
                 <th className="pb-3">Merchant</th>

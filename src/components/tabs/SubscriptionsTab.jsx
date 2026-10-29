@@ -81,9 +81,9 @@ export default function SubscriptionsTab({
         </div>
       </div>
 
-      {/* 3. Subscriptions Detailed Table */}
+      {/* 3. Subscriptions Detailed Table & Mobile List */}
       <div className="bg-[#1C1C1E] rounded-[12px] border border-[#38383A] shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#38383A] flex justify-between items-center bg-[#2C2C2E]/60">
+        <div className="p-4 border-b border-[#38383A] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#2C2C2E]/60">
           <div>
             <h3 className="text-sm font-semibold text-[#F5F5F7] tracking-tight">Detected Recurring Charges</h3>
             <p className="text-xs text-[#8E8E93] mt-0.5">Automated detection from merchant billing patterns</p>
@@ -93,13 +93,79 @@ export default function SubscriptionsTab({
             size="sm"
             icon={Flame}
             onClick={onOpenBurnerCard}
+            className="self-start sm:self-auto shrink-0"
           >
             Protect Trial with Burner
           </Button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        {/* Mobile View: Native Card List */}
+        <div className="md:hidden divide-y divide-[#38383A]/60">
+          {subscriptions.map((sub) => {
+            const linkedCard = cards.find((c) => c.id === sub.cardId);
+            const isCardFrozen = linkedCard?.isLocked;
+
+            return (
+              <div key={sub.id} className="p-3.5 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-[8px] bg-[#2C2C2E] border border-[#38383A] text-[#8E8E93] flex items-center justify-center font-bold text-xs font-mono shrink-0">
+                      {sub.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-xs text-[#F5F5F7] truncate">{sub.name}</span>
+                        <Badge variant="default" size="xs">{sub.frequency}</Badge>
+                      </div>
+                      <div className="text-[11px] text-[#8E8E93] mt-0.5 truncate font-mono">
+                        {sub.cardName}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0 font-mono">
+                    <div className="font-semibold text-xs text-[#F5F5F7]">
+                      ${parseFloat(sub.monthlyCost || 0).toFixed(2)}/mo
+                    </div>
+                    <div className="text-[10px] text-[#8E8E93]">
+                      ${parseFloat(sub.annualCost || 0).toFixed(2)}/yr
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-2 pt-1 text-xs">
+                  <span className="text-[11px] text-[#FF9F0A] font-mono">
+                    Due {sub.nextChargeDate} ({sub.daysRemaining}d)
+                  </span>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => onFreezeCard(sub.cardId)}
+                      className={`px-2.5 py-1 rounded-[6px] font-medium text-xs transition duration-100 active:scale-[0.98] border flex items-center gap-1 ${
+                        isCardFrozen
+                          ? 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30'
+                          : 'bg-[#2C2C2E] text-[#8E8E93] border-[#38383A] hover:text-[#FF453A]'
+                      }`}
+                    >
+                      {isCardFrozen ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                      <span>{isCardFrozen ? 'Unfreeze' : 'Freeze'}</span>
+                    </button>
+                    <button
+                      onClick={() => onFilterMerchantHistory(sub.name)}
+                      className="px-2.5 py-1 rounded-[6px] font-medium text-xs text-[#8E8E93] hover:text-[#F5F5F7] bg-[#2C2C2E] border border-[#38383A]"
+                    >
+                      Ledger
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Desktop View: Full Ledger Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left text-xs min-w-[640px]">
             <thead>
               <tr className="border-b border-[#38383A] bg-[#2C2C2E]/40 text-[#8E8E93] uppercase font-mono text-[10px] tracking-wider">
                 <th className="py-3 px-5">Service &amp; Provider</th>
@@ -166,7 +232,7 @@ export default function SubscriptionsTab({
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => onFreezeCard(sub.cardId)}
-                          className={`px-2.5 py-1.5 rounded-[8px] font-medium text-xs transition duration-100 active:scale-[0.98] border flex items-center gap-1 ${
+                          className={`min-w-[104px] justify-center px-2.5 py-1.5 rounded-[8px] font-medium text-xs transition duration-100 active:scale-[0.98] border flex items-center gap-1.5 box-border ${
                             isCardFrozen
                               ? 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30 hover:bg-[#34C759]/25'
                               : 'bg-[#2C2C2E] text-[#8E8E93] border-[#38383A] hover:bg-[#FF453A]/20 hover:text-[#FF453A] hover:border-[#FF453A]/40'

@@ -25,13 +25,44 @@ main, aside, .overflow-y-auto, .overflow-x-auto {
   overscroll-behavior-x: contain;
 }
 
+/* ── Universal Scrollbar Suppression & Zero Layout Shift ── */
+html, body, #root, * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* ── Native App Feel: Global user-select none across UI ── */
+*, *::before, *::after {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none;
+}
+
+/* ── Allow text selection specifically in inputs, textareas, and editable text ── */
+input,
+textarea,
+[contenteditable="true"],
+.select-text,
+.selectable,
+::selection {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
 /* ── Clean Mobile No-Scrollbar Utility ── */
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+  display: none !important;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 /* ── Mobile Touch Polish ── */
@@ -69,27 +100,165 @@ button, a, input, select, textarea {
 }
 
 /* ── Subtle Fast Micro-Interactions (150ms) ── */
-button, a, input, select, textarea {
+button, [role="button"], a {
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-duration: 150ms;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-sizing: border-box;
 }
 
-/* ── Crisp, thin 1px hairline inputs (Apple HIG) ── */
-input, select, textarea {
+/* ── Crisp, thin 1px hairline inputs (Apple HIG) - Zero Layout Shifts ── */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea {
   border-width: 1px !important;
+  border-style: solid !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
-  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+  box-sizing: border-box !important;
+  line-height: normal;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s ease-out !important;
 }
 
-input:focus, select:focus, textarea:focus,
-input:focus-visible, select:focus-visible, textarea:focus-visible {
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+textarea:focus,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus-visible,
+textarea:focus-visible {
   outline: none !important;
   border-color: #0A84FF !important;
   box-shadow: 0 0 0 1px rgba(10, 132, 255, 0.4) !important;
 }
 
-/* ── Focus rings override (Apple HIG Blue hairline) ── */
+/* ── Custom Dark Apple HIG Dropdown Select ── */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: #2C2C2E !important;
+  color: #F5F5F7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 0.375rem 2.25rem 0.375rem 0.65rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.25rem !important;
+  box-sizing: border-box !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238E8E93' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-position: right 0.65rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 0.875rem 0.875rem !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s ease-out !important;
+}
+
+select:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background-color: #343438 !important;
+}
+
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  border-color: #0A84FF !important;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.35) !important;
+}
+
+select option {
+  background-color: #1C1C1E !important;
+  color: #F5F5F7 !important;
+  padding: 8px 12px !important;
+}
+
+select option:checked {
+  background-color: #0A84FF !important;
+  color: #ffffff !important;
+}
+
+/* ── Custom Dark Apple HIG Checkbox (Selection Boxes) ── */
+input[type="checkbox"] {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  border-radius: 5px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  background-color: #2C2C2E !important;
+  display: inline-grid !important;
+  place-content: center !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  vertical-align: middle !important;
+}
+
+input[type="checkbox"]:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: #343438 !important;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #0A84FF !important;
+  border-color: #0A84FF !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.5L6.5 11.5L12.5 4.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-size: 80% 80% !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: 0 0 10px rgba(10, 132, 255, 0.4) !important;
+}
+
+input[type="checkbox"]:focus,
+input[type="checkbox"]:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.45) !important;
+}
+
+/* ── Custom Dark Apple HIG Radio (Selection Circles) ── */
+input[type="radio"] {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  border-radius: 50% !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  background-color: #2C2C2E !important;
+  display: inline-grid !important;
+  place-content: center !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  vertical-align: middle !important;
+}
+
+input[type="radio"]:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: #343438 !important;
+}
+
+input[type="radio"]:checked {
+  border-color: #0A84FF !important;
+  background-color: #0A84FF !important;
+  background-image: radial-gradient(circle, #ffffff 38%, transparent 42%) !important;
+  box-shadow: 0 0 10px rgba(10, 132, 255, 0.4) !important;
+}
+
+input[type="radio"]:focus,
+input[type="radio"]:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.45) !important;
+}
+
+/* ── Focus rings override (Apple HIG Blue hairline for keyboard only) ── */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 *:focus-visible {
   outline: none;
   box-shadow: 0 0 0 1px #0A84FF;
@@ -305,22 +474,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   -webkit-backdrop-filter: blur(16px);
 }
 
-/* ── Scrollbar styling ── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  transition: background-color 150ms ease-out;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.28);
-}
+
 
 /* ── Input autofill override (OLED Dark Mode) ── */
 input:-webkit-autofill,

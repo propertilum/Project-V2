@@ -265,16 +265,16 @@ export default function AdminDashboard({
               placeholder="Search customer name, email, phone, card..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] transition"
+              className="w-full pl-9 pr-4 h-9 bg-[#2C2C2E] border border-[#38383A] rounded-[8px] text-[13px] text-white placeholder-[#8E8E93] focus:outline-none focus:border-[#0A84FF] focus:ring-1 focus:ring-[#0A84FF] transition box-border"
             />
           </div>
 
           {/* Filters & Export */}
           <div className="flex flex-wrap items-center gap-2 text-[12px]">
-            <div className="flex bg-[#2C2C2E] p-0.5 rounded-[8px] border border-[#38383A]">
+            <div className="flex items-center h-9 bg-[#2C2C2E] p-0.5 rounded-[8px] border border-[#38383A] box-border">
               <button
                 onClick={() => setStatusFilter('all')}
-                className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+                className={`px-3 h-7.5 rounded-[6px] font-medium transition active:scale-[0.98] flex items-center justify-center ${
                   statusFilter === 'all' ? 'bg-[#0A84FF] text-white shadow-sm' : 'text-[#8E8E93] hover:text-white'
                 }`}
               >
@@ -282,7 +282,7 @@ export default function AdminDashboard({
               </button>
               <button
                 onClick={() => setStatusFilter('active')}
-                className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+                className={`px-3 h-7.5 rounded-[6px] font-medium transition active:scale-[0.98] flex items-center justify-center ${
                   statusFilter === 'active' ? 'bg-[#0A84FF] text-white shadow-sm' : 'text-[#8E8E93] hover:text-white'
                 }`}
               >
@@ -290,7 +290,7 @@ export default function AdminDashboard({
               </button>
               <button
                 onClick={() => setStatusFilter('suspended')}
-                className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+                className={`px-3 h-7.5 rounded-[6px] font-medium transition active:scale-[0.98] flex items-center justify-center ${
                   statusFilter === 'suspended' ? 'bg-[#0A84FF] text-white shadow-sm' : 'text-[#8E8E93] hover:text-white'
                 }`}
               >
@@ -300,7 +300,7 @@ export default function AdminDashboard({
 
             <button
               onClick={handleExportCSV}
-              className="px-3 py-1.5 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] border border-[#38383A] text-[#F5F5F7] rounded-[8px] transition flex items-center gap-1.5 font-medium"
+              className="px-3 h-9 bg-[#2C2C2E] hover:bg-[#38383A] active:scale-[0.98] border border-[#38383A] text-[#F5F5F7] rounded-[8px] transition flex items-center gap-1.5 font-medium box-border"
               title="Download CSV roster of all customer details"
             >
               <Download className="w-3.5 h-3.5 text-[#0A84FF]" />

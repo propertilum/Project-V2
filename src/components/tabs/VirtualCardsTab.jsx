@@ -81,38 +81,40 @@ export default function VirtualCardsTab({
 
       {/* Filter Tabs (macOS Segmented Control) */}
       <div className="flex items-center justify-between gap-4 pb-2 border-b border-[#38383A]">
-        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs">
+        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs overflow-x-auto no-scrollbar w-full sm:w-auto">
           <button
             onClick={() => setStatusFilter('all')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              statusFilter === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              statusFilter === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            All Virtual ({virtualCards.length})
+            <span className="sm:hidden">All ({virtualCards.length})</span>
+            <span className="hidden sm:inline">All Virtual ({virtualCards.length})</span>
           </button>
           <button
             onClick={() => setStatusFilter('active')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              statusFilter === 'active' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              statusFilter === 'active' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             Active ({activeCount})
           </button>
           <button
             onClick={() => setStatusFilter('frozen')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              statusFilter === 'frozen' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              statusFilter === 'frozen' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
             Frozen ({frozenCount})
           </button>
           <button
             onClick={() => setStatusFilter('burner')}
-            className={`px-3 py-1.5 rounded-[6px] font-medium transition duration-100 ${
-              statusFilter === 'burner' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 border whitespace-nowrap text-center ${
+              statusFilter === 'burner' ? 'bg-[#2C2C2E] text-[#F5F5F7] border-[#38383A] shadow-sm' : 'border-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Burner / Disposable
+            <span className="sm:hidden">Burner</span>
+            <span className="hidden sm:inline">Burner / Disposable</span>
           </button>
         </div>
 

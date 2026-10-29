@@ -46,12 +46,12 @@ export default function Badge({ children, variant = 'default', size = 'sm', dot 
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-mono font-medium rounded-full border ${variants[variant] || variants.default} ${sizes[size] || sizes.sm} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-mono font-medium rounded-full border shrink-0 whitespace-nowrap select-none ${variants[variant] || variants.default} ${sizes[size] || sizes.sm} ${className}`}
     >
       {dot && (
-        <span className={`w-1.5 h-1.5 rounded-full ${dotColors[variant] || 'bg-current'}`} />
+        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColors[variant] || 'bg-current'}`} />
       )}
-      <span>{children}</span>
+      <span className="whitespace-nowrap">{children}</span>
     </span>
   );
 }

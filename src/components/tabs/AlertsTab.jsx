@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import Select from '../ui/Select';
 import EmptyState from '../ui/EmptyState';
 import { SkeletonTable } from '../ui/Skeleton';
 import { formatRelativeTime } from '../../utils/formatters';
@@ -36,7 +37,7 @@ export default function AlertsTab({
     <div className="space-y-6 text-[#F5F5F7]">
       {/* Top Health Assessment Card (macOS System Settings Style) */}
       <div className="bg-[#1C1C1E] p-5 rounded-[12px] border border-[#38383A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-3.5">
+        <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
           <div className={`w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0 ${
             highSeverityCount > 0
               ? 'bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30'
@@ -52,8 +53,8 @@ export default function AlertsTab({
               <ShieldCheck className="w-5 h-5" />
             )}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-[15px] font-semibold text-[#F5F5F7] tracking-tight">
                 {highSeverityCount > 0
                   ? `${highSeverityCount} High Priority Security Alert${highSeverityCount > 1 ? 's' : ''}`
@@ -82,30 +83,31 @@ export default function AlertsTab({
 
       {/* Filter Tabs Bar (macOS Segmented Control) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#38383A]">
-        <div className="flex items-center gap-0.5 p-0.5 bg-[#2C2C2E] rounded-[8px] border border-[#38383A] text-[12px]">
+        <div className="flex items-center gap-1 p-1 bg-[#2C2C2E] rounded-[8px] border border-[#38383A] text-[12px] overflow-x-auto no-scrollbar w-full sm:w-auto">
           <button
             onClick={() => setStatusFilter('open')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+            className={`flex-1 sm:flex-initial px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] whitespace-nowrap text-center ${
               statusFilter === 'open'
                 ? 'bg-[#0A84FF] text-white shadow-sm'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Unresolved ({openCount})
+            <span className="sm:hidden">Open ({openCount})</span>
+            <span className="hidden sm:inline">Unresolved ({openCount})</span>
           </button>
           <button
             onClick={() => setStatusFilter('all')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+            className={`flex-1 sm:flex-initial px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] whitespace-nowrap text-center ${
               statusFilter === 'all'
                 ? 'bg-[#0A84FF] text-white shadow-sm'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            All Alerts ({alerts.length})
+            All ({alerts.length})
           </button>
           <button
             onClick={() => setStatusFilter('resolved')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] ${
+            className={`flex-1 sm:flex-initial px-3 py-1 rounded-[6px] font-medium transition active:scale-[0.98] whitespace-nowrap text-center ${
               statusFilter === 'resolved'
                 ? 'bg-[#0A84FF] text-white shadow-sm'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7]'
@@ -115,18 +117,19 @@ export default function AlertsTab({
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[12px] text-[#8E8E93] font-medium">Severity:</span>
-          <select
+        <div className="flex items-center gap-2 min-w-[170px]">
+          <span className="text-[12px] text-[#8E8E93] font-medium shrink-0">Severity:</span>
+          <Select
             value={severityFilter}
-            onChange={(e) => setSeverityFilter(e.target.value)}
-            className="bg-[#2C2C2E] text-[#F5F5F7] text-[12px] px-2.5 py-1 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
-          >
-            <option value="all">All Severities</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
+            onChange={setSeverityFilter}
+            options={[
+              { value: 'all', label: 'All Severities' },
+              { value: 'high', label: 'High' },
+              { value: 'medium', label: 'Medium' },
+              { value: 'low', label: 'Low' },
+            ]}
+            size="sm"
+          />
         </div>
       </div>
 

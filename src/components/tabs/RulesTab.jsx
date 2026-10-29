@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import Modal from '../ui/Modal';
+import Select from '../ui/Select';
 import { evaluateTransaction, DECISIONS } from '../../domain/rules/ruleEngine';
 
 export default function RulesTab({
@@ -74,7 +76,7 @@ export default function RulesTab({
       {/* Top Explanation Banner */}
       <div className="p-5 rounded-[12px] bg-[#1C1C1E] border border-[#38383A] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <h2 className="text-sm font-semibold text-[#F5F5F7] tracking-tight">
               Spending Controls &amp; Enforcement Policy
             </h2>
@@ -118,17 +120,15 @@ export default function RulesTab({
             <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
               Target Card
             </label>
-            <select
+            <Select
               value={simCardId}
-              onChange={(e) => setSimCardId(e.target.value)}
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
-            >
-              {cards.map((card) => (
-                <option key={card.id} value={card.id}>
-                  {card.label} ({card.source === 'bank_connection' ? 'Bank Card' : 'Virtual'} ···{card.last4 || '4242'})
-                </option>
-              ))}
-            </select>
+              onChange={setSimCardId}
+              options={cards.map((card) => ({
+                value: card.id,
+                label: `${card.label} (${card.source === 'bank_connection' ? 'Bank' : 'Virtual'} ···${card.last4 || '4242'})`,
+              }))}
+              size="sm"
+            />
           </div>
 
           {/* Merchant Name */}
@@ -141,7 +141,7 @@ export default function RulesTab({
               value={simMerchant}
               onChange={(e) => setSimMerchant(e.target.value)}
               placeholder="e.g. Netflix, Amazon"
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] h-8 text-xs box-border"
             />
           </div>
 
@@ -156,7 +156,7 @@ export default function RulesTab({
               value={simAmount}
               onChange={(e) => setSimAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono"
+              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono h-8 text-xs box-border"
             />
           </div>
 
@@ -165,17 +165,18 @@ export default function RulesTab({
             <label className="text-[11px] font-semibold text-[#8E8E93] uppercase tracking-wider block mb-1.5 font-mono">
               Merchant Category
             </label>
-            <select
+            <Select
               value={simCategory}
-              onChange={(e) => setSimCategory(e.target.value)}
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3 py-1.5 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
-            >
-              <option value="Streaming">Streaming &amp; Subscriptions</option>
-              <option value="E-Commerce">E-Commerce &amp; Retail</option>
-              <option value="Travel">Airlines &amp; Hotels</option>
-              <option value="Software">Developer Tools &amp; Cloud</option>
-              <option value="High Risk">High Risk / Unverified</option>
-            </select>
+              onChange={setSimCategory}
+              options={[
+                { value: 'Streaming', label: 'Streaming & Subscriptions' },
+                { value: 'E-Commerce', label: 'E-Commerce & Retail' },
+                { value: 'Travel', label: 'Airlines & Hotels' },
+                { value: 'Software', label: 'Developer Tools & Cloud' },
+                { value: 'High Risk', label: 'High Risk / Unverified' },
+              ]}
+              size="sm"
+            />
           </div>
 
           {/* Toggles */}
@@ -258,36 +259,39 @@ export default function RulesTab({
       </div>
 
       {/* Rules Filter Bar (macOS Segmented Control) */}
-      <div className="flex items-center justify-between gap-4 pb-2 border-b border-[#38383A]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#38383A]">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-[#8E8E93]" />
           <span className="text-xs font-semibold text-[#F5F5F7]">Active Rules ({filteredRules.length})</span>
         </div>
 
-        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs">
+        <div className="flex items-center gap-1 p-1 bg-[#1C1C1E] rounded-[8px] border border-[#38383A] text-xs overflow-x-auto no-scrollbar w-full sm:w-auto">
           <button
             onClick={() => setFilterMode('all')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 whitespace-nowrap text-center ${
               filterMode === 'all' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            All Rules
+            <span className="sm:hidden">All ({rules.length})</span>
+            <span className="hidden sm:inline">All Rules</span>
           </button>
           <button
             onClick={() => setFilterMode('enforced')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 whitespace-nowrap text-center ${
               filterMode === 'enforced' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Enforced by Provider
+            <span className="sm:hidden">Enforced</span>
+            <span className="hidden sm:inline">Enforced by Provider</span>
           </button>
           <button
             onClick={() => setFilterMode('monitoring')}
-            className={`px-3 py-1 rounded-[6px] font-medium transition duration-100 ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[6px] font-medium transition duration-100 whitespace-nowrap text-center ${
               filterMode === 'monitoring' ? 'bg-[#2C2C2E] text-[#F5F5F7] border border-[#38383A] shadow-sm' : 'text-[#8E8E93] hover:text-[#F5F5F7]'
             }`}
           >
-            Monitoring Only
+            <span className="sm:hidden">Monitoring</span>
+            <span className="hidden sm:inline">Monitoring Only</span>
           </button>
         </div>
       </div>
@@ -407,99 +411,89 @@ function CreateRuleModal({ cards, onClose, onAddRule }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-[#1C1C1E] border border-[#38383A] rounded-[14px] p-6 shadow-2xl space-y-5 animate-scale-in">
-        <div className="flex items-center justify-between pb-3 border-b border-[#38383A]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[8px] bg-[#0A84FF]/10 text-[#0A84FF] border border-[#0A84FF]/20 flex items-center justify-center">
-              <Shield className="w-4 h-4" />
-            </div>
-            <h3 className="text-base font-semibold text-[#F5F5F7]">Create Spending Rule</h3>
-          </div>
-          <button onClick={onClose} className="text-[#8E8E93] hover:text-[#F5F5F7] p-1">
-            ✕
-          </button>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title="Create Spending Rule"
+      subtitle="Define deterministic spending boundaries and transaction velocity limits."
+      icon={Shield}
+      maxWidth="max-w-lg"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        <div>
+          <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Name</label>
+          <input
+            type="text"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. AWS Billing Hard Cap"
+            className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Name</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. AWS Billing Hard Cap"
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
+            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Target Card</label>
+            <Select
+              value={cardId}
+              onChange={setCardId}
+              options={cards.map((c) => ({
+                value: c.id,
+                label: `${c.label} (${c.source === 'bank_connection' ? 'Bank' : 'Virtual'})`,
+              }))}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Target Card</label>
-              <select
-                value={cardId}
-                onChange={(e) => setCardId(e.target.value)}
-                className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
-              >
-                {cards.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label} ({c.source === 'bank_connection' ? 'Bank' : 'Virtual'})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Type</label>
-              <select
-                value={ruleType}
-                onChange={(e) => setRuleType(e.target.value)}
-                className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF]"
-              >
-                <option value="max_per_tx">Maximum Per Transaction</option>
-                <option value="monthly_budget">Monthly Budget Cap</option>
-                <option value="lifetime_budget">Lifetime Budget</option>
-              </select>
-            </div>
-          </div>
-
           <div>
-            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Threshold Amount ($)</label>
-            <input
-              type="number"
-              step="0.01"
-              required
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono"
+            <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Rule Type</label>
+            <Select
+              value={ruleType}
+              onChange={setRuleType}
+              options={[
+                { value: 'max_per_tx', label: 'Maximum Per Transaction' },
+                { value: 'monthly_budget', label: 'Monthly Budget Cap' },
+                { value: 'lifetime_budget', label: 'Lifetime Budget' },
+              ]}
             />
           </div>
+        </div>
 
-          {/* Transparent Enforcement Mode Notice */}
-          <div className={`p-3 rounded-[8px] border text-[11px] leading-relaxed ${
-            isBankCard
-              ? 'bg-[#FF9F0A]/10 border-[#FF9F0A]/30 text-[#FF9F0A]'
-              : 'bg-[#34C759]/10 border-[#34C759]/30 text-[#34C759]'
-          }`}>
-            <span className="font-semibold block mb-0.5">
-              Enforcement Mode: {isBankCard ? 'Monitoring Only' : 'Hardware Provider Enforced'}
-            </span>
-            {isBankCard
-              ? 'This is a linked bank card. CardHub will trigger security alerts if this limit is passed, but cannot decline the payment at your bank.'
-              : 'This is a CardHub virtual card. Transactions exceeding this limit will be declined in real-time by the issuing gateway.'}
-          </div>
+        <div>
+          <label className="text-[#8E8E93] font-semibold block mb-1 font-mono uppercase text-[11px]">Threshold Amount ($)</label>
+          <input
+            type="number"
+            step="0.01"
+            required
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-full bg-[#2C2C2E] text-[#F5F5F7] px-3.5 py-2 rounded-[8px] border border-[#38383A] focus:outline-none focus:border-[#0A84FF] font-mono"
+          />
+        </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#38383A]">
-            <Button type="button" variant="ghost" size="sm" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Save Rule
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* Transparent Enforcement Mode Notice */}
+        <div className={`p-3 rounded-[8px] border text-[11px] leading-relaxed ${
+          isBankCard
+            ? 'bg-[#FF9F0A]/10 border-[#FF9F0A]/30 text-[#FF9F0A]'
+            : 'bg-[#34C759]/10 border-[#34C759]/30 text-[#34C759]'
+        }`}>
+          <span className="font-semibold block mb-0.5">
+            Enforcement Mode: {isBankCard ? 'Monitoring Only' : 'Hardware Provider Enforced'}
+          </span>
+          {isBankCard
+            ? 'This is a linked bank card. CardHub will trigger security alerts if this limit is passed, but cannot decline the payment at your bank.'
+            : 'This is a CardHub virtual card. Transactions exceeding this limit will be declined in real-time by the issuing gateway.'}
+        </div>
+
+        <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#38383A]">
+          <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="primary" size="sm">
+            Save Rule
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 }

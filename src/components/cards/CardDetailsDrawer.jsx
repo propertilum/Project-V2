@@ -56,17 +56,19 @@ export default function CardDetailsDrawer({
     >
       <div className="space-y-5 text-xs">
         {/* Source Badge & Connection Status */}
-        <div className="flex items-center justify-between p-3 rounded-[8px] bg-[#2C2C2E]/60 border border-[#38383A]">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between p-3 rounded-[8px] bg-[#2C2C2E]/60 border border-[#38383A] gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-wrap">
             <Badge variant={isBankCard ? 'monitoring' : isVirtual ? 'enforced' : 'demo'} size="xs">
               {isBankCard ? 'Linked Bank Card' : isVirtual ? 'CardHub Virtual Issuer' : 'Demo Card'}
             </Badge>
-            <span className="text-[#8E8E93] font-mono text-[11px]">
-              {card.institution || 'Direct Provider'}
-            </span>
+            {card.institution && card.institution !== 'CardHub Virtual Issuer' && (
+              <span className="text-[#8E8E93] font-mono text-[11px] truncate">
+                {card.institution}
+              </span>
+            )}
           </div>
 
-          <span className="text-[11px] text-[#8E8E93] font-mono">
+          <span className="text-[11px] text-[#8E8E93] font-mono shrink-0">
             {card.lastSyncedAt ? `Synced ${formatRelativeTime(card.lastSyncedAt)}` : 'Live'}
           </span>
         </div>
@@ -75,50 +77,50 @@ export default function CardDetailsDrawer({
         <div className="max-w-md mx-auto">
           <CardPreview card={card} showNumber={showSensitive} showCVV={showCVV} />
           
-          <div className="grid grid-cols-4 gap-2 mt-3.5">
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-2 mt-3.5 text-[11px] sm:text-xs">
             <button
               onClick={() => onCopy(card.cardNumber, 'Card Number')}
-              className="py-2 px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5"
+              className="py-2 px-1 sm:px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-1.5"
             >
-              <Copy className="w-3.5 h-3.5 text-[#0A84FF]" />
+              <Copy className="w-3.5 h-3.5 text-[#0A84FF] shrink-0" />
               <span>Copy</span>
             </button>
             <button
               onClick={() => setShowSensitive(!showSensitive)}
-              className="py-2 px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5"
+              className="py-2 px-1 sm:px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-1.5"
             >
-              {showSensitive ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {showSensitive ? <EyeOff className="w-3.5 h-3.5 shrink-0" /> : <Eye className="w-3.5 h-3.5 shrink-0" />}
               <span>{showSensitive ? 'Hide' : 'Reveal'}</span>
             </button>
             <button
               onClick={() => setShowCVV(!showCVV)}
-              className="py-2 px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5"
+              className="py-2 px-1 sm:px-2 bg-[#2C2C2E] hover:bg-[#38383A] text-[#F5F5F7] font-medium rounded-[8px] border border-[#38383A] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-1.5"
             >
-              <Lock className="w-3.5 h-3.5 text-[#0A84FF]" />
-              <span>{showCVV ? 'Hide CVV' : 'CVV'}</span>
+              <Lock className="w-3.5 h-3.5 text-[#0A84FF] shrink-0" />
+              <span>{showCVV ? 'Hide' : 'CVV'}</span>
             </button>
 
             {/* Freeze button: disabled if bank card */}
             {!isBankCard ? (
               <button
                 onClick={() => onUpdateCard(card.id, { isLocked: !card.isLocked })}
-                className={`py-2 px-2 font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1.5 ${
+                className={`py-2 px-1 sm:px-2 font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-1.5 ${
                   card.isLocked
                     ? 'bg-[#34C759] text-white hover:bg-[#28B04C]'
                     : 'bg-[#2C2C2E] hover:bg-[#FF453A]/20 text-[#FF453A] border border-[#38383A]'
                 }`}
               >
-                {card.isLocked ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                {card.isLocked ? <Unlock className="w-3.5 h-3.5 shrink-0" /> : <Lock className="w-3.5 h-3.5 shrink-0" />}
                 <span>{card.isLocked ? 'Unfreeze' : 'Freeze'}</span>
               </button>
             ) : (
               <button
                 disabled
                 title="Bank cards cannot be frozen remotely by CardHub."
-                className="py-2 px-2 font-medium rounded-[8px] bg-[#1C1C1E] text-[#636366] border border-[#38383A] cursor-not-allowed flex items-center justify-center gap-1 text-[11px]"
+                className="py-2 px-1 sm:px-2 font-medium rounded-[8px] bg-[#1C1C1E] text-[#636366] border border-[#38383A] cursor-not-allowed flex items-center justify-center gap-1 text-[11px]"
               >
-                <Lock className="w-3 h-3 text-[#636366]" />
-                <span>Freeze N/A</span>
+                <Lock className="w-3 h-3 text-[#636366] shrink-0" />
+                <span>N/A</span>
               </button>
             )}
           </div>
@@ -272,12 +274,12 @@ export default function CardDetailsDrawer({
         </div>
 
         {/* Burner / Deletion Actions */}
-        <div className="pt-4 border-t border-[#38383A] flex items-center justify-between">
+        <div className="pt-4 border-t border-[#38383A] flex flex-wrap items-center justify-between gap-3">
           {card.isBurner ? (
             <button
               onClick={() => onUpdateCard(card.id, { isBurned: true, isLocked: true })}
               disabled={card.isBurned}
-              className="py-2 px-3.5 bg-[#FF453A]/15 text-[#FF453A] hover:bg-[#FF453A]/25 border border-[#FF453A]/30 font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center gap-1.5 disabled:opacity-40"
+              className="py-2 px-3.5 bg-[#FF453A]/15 text-[#FF453A] hover:bg-[#FF453A]/25 border border-[#FF453A]/30 font-medium rounded-[8px] transition duration-100 active:scale-[0.98] flex items-center gap-1.5 disabled:opacity-40 text-xs"
             >
               <Flame className="w-4 h-4 text-[#FF453A]" />
               <span>{card.isBurned ? 'Token Already Burned' : 'Destroy Token'}</span>
@@ -285,17 +287,17 @@ export default function CardDetailsDrawer({
           ) : (
             <div>
               {confirmDelete ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-[#FF453A] font-medium">Permanently delete?</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[#FF453A] font-medium text-xs">Permanently delete?</span>
                   <button
                     onClick={() => { onDeleteCard(card.id); onClose(); }}
-                    className="px-3 py-1.5 bg-[#FF453A] hover:bg-[#E03A30] text-white rounded-[8px] font-medium"
+                    className="px-3 py-1.5 bg-[#FF453A] hover:bg-[#E03A30] text-white rounded-[8px] font-medium text-xs"
                   >
                     Confirm
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
-                    className="px-3 py-1.5 bg-[#2C2C2E] text-[#F5F5F7] hover:bg-[#38383A] rounded-[8px] font-medium border border-[#38383A]"
+                    className="px-3 py-1.5 bg-[#2C2C2E] text-[#F5F5F7] hover:bg-[#38383A] rounded-[8px] font-medium border border-[#38383A] text-xs"
                   >
                     Cancel
                   </button>
@@ -303,7 +305,7 @@ export default function CardDetailsDrawer({
               ) : (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="text-[#8E8E93] hover:text-[#FF453A] transition flex items-center gap-1.5 font-medium"
+                  className="text-[#8E8E93] hover:text-[#FF453A] transition flex items-center gap-1.5 font-medium text-xs"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>Terminate Virtual Card</span>
@@ -314,7 +316,7 @@ export default function CardDetailsDrawer({
 
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-[#0A84FF] hover:bg-[#0077ED] text-white font-medium rounded-[8px] transition duration-100 active:scale-[0.98] shadow-sm"
+            className="px-4 py-2 bg-[#0A84FF] hover:bg-[#0077ED] text-white font-medium rounded-[8px] transition duration-100 active:scale-[0.98] shadow-sm ml-auto text-xs"
           >
             Done
           </button>

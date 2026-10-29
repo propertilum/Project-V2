@@ -1100,7 +1100,7 @@ export default function Cardhub() {
                 <div className="flex rounded-[10px] bg-[#1C1C1E] border border-[#38383A] p-1 shadow-xs">
                   <button
                     onClick={() => handleTabChange('rules')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] ${
+                    className={`flex-1 h-8 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] flex items-center justify-center box-border ${
                       activeTab === 'rules'
                         ? 'bg-[#0A84FF] text-white shadow-xs'
                         : 'text-[#8E8E93] hover:text-[#F5F5F7]'
@@ -1110,7 +1110,7 @@ export default function Cardhub() {
                   </button>
                   <button
                     onClick={() => handleTabChange('alerts')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 h-8 text-xs font-semibold rounded-[8px] transition active:scale-[0.98] flex items-center justify-center gap-1.5 box-border ${
                       activeTab === 'alerts'
                         ? 'bg-[#FF453A] text-white shadow-xs'
                         : 'text-[#8E8E93] hover:text-[#F5F5F7]'

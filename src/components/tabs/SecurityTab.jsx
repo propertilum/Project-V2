@@ -98,7 +98,7 @@ export default function SecurityTab({
 
           <button
             onClick={onPanicFreezeAll}
-            className={`w-full py-2.5 rounded-[8px] font-medium text-xs transition duration-100 active:scale-[0.98] flex items-center justify-center gap-2 shadow-sm ${
+            className={`w-full h-10 rounded-[8px] font-medium text-xs transition duration-100 active:scale-[0.98] flex items-center justify-center gap-2 shadow-sm box-border ${
               allCardsFrozen
                 ? 'bg-[#34C759] hover:bg-[#28B04C] text-white shadow-[#34C759]/20'
                 : 'bg-[#FF453A] hover:bg-[#E03A30] text-white shadow-[#FF453A]/20'
@@ -174,8 +174,8 @@ export default function SecurityTab({
               </label>
             </div>
 
-            <div className="p-3 bg-[#2C2C2E]/60 rounded-[8px] border border-[#38383A] flex items-center justify-between">
-              <div>
+            <div className="p-3 bg-[#2C2C2E]/60 rounded-[8px] border border-[#38383A] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="min-w-0">
                 <div className="font-medium text-[#F5F5F7]">Cryptographic Email Verification</div>
                 <div className="text-[11px] text-[#8E8E93]">
                   {currentUser?.emailVerified
@@ -184,14 +184,14 @@ export default function SecurityTab({
                 </div>
               </div>
               {currentUser?.emailVerified ? (
-                <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] border border-[#34C759]/30 text-[11px] font-medium flex items-center gap-1 font-mono">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] border border-[#34C759]/30 text-[11px] font-medium flex items-center gap-1 font-mono shrink-0 whitespace-nowrap self-start sm:self-auto">
                   <CheckCircle className="w-3.5 h-3.5 text-[#34C759]" />
                   <span>Verified</span>
                 </span>
               ) : (
                 <button
                   onClick={onOpenVerifyEmail}
-                  className="px-2.5 py-1 rounded-[6px] bg-[#FF9F0A] hover:bg-[#E08A00] text-black font-semibold text-xs transition duration-100 active:scale-[0.98] shadow-sm flex items-center gap-1.5"
+                  className="px-2.5 py-1 rounded-[6px] bg-[#FF9F0A] hover:bg-[#E08A00] text-black font-semibold text-xs transition duration-100 active:scale-[0.98] shadow-sm flex items-center gap-1.5 shrink-0 whitespace-nowrap self-start sm:self-auto"
                 >
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Verify Now</span>
